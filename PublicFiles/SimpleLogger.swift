@@ -130,9 +130,6 @@ public struct SimpleLogger {
         if SimpleLogger.isLoggingEnabled {
             SimpleLogger.logMessage(message, item: item, withLogLevel: logLevel)
         }
-        else {
-            debugPrint("Logging is not enabled")
-        }
     }
     
     /** Prints glyph prefixed `message` and passed `item` if any */
