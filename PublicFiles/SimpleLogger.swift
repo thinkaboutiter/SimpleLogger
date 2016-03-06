@@ -28,7 +28,7 @@ public typealias Logger = SimpleLogger
 
 // MARK: - SimpleLogger
 
-public struct SimpleLogger {
+public class SimpleLogger: NSObject {
     
     // MARK: LogLevel
     
@@ -84,56 +84,56 @@ public struct SimpleLogger {
     // MARK: - logging API
     
     /** Prints `Custom` log `message` and passed `item` if any */
-    public static func logCustom(message: String?, item: Any?) {
+    public static func logCustom(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Custom)
     }
     
     /** Prints `Debug` log `message` and passed `item` if any */
-    public static func logDebug(message: String?, item: Any?) {
+    public static func logDebug(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Debug)
     }
     
     /** Prints `Error` log `message` and passed `item` if any */
-    public static func logError(message: String?, item: Any?) {
+    public static func logError(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Error)
     }
     
     /** Prints `Warning` log `message` and passed `item` if any */
-    public static func logWarning(message: String?, item: Any?) {
+    public static func logWarning(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Warning)
     }
     
     /** Prints `Success` log `message` and passed `item` if any */
-    public static func logSuccess(message: String?, item: Any?){
+    public static func logSuccess(message: String?, item: AnyObject?){
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Success)
     }
     
     /** Prints `Info` log `message` and passed `item` if any */
-    public static func logInfo(message: String?, item: Any?) {
+    public static func logInfo(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Info)
     }
     
     /** Prints `Network` log `message` and passed `item` if any */
-    public static func logNetwork(message: String?, item: Any?) {
+    public static func logNetwork(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Network)
     }
     
     /** Prints `Cache` log `message` and passed `item` if any */
-    public static func logCache(message: String?, item: Any?) {
+    public static func logCache(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Cache)
     }
     
     // MARK: - Helpers
     
     /** Prints if `isLoggingEnabled` is set */
-    private static func log(message: String?, item: Any?, withLogLevel logLevel: LogLevel) {
+    private static func log(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
         if SimpleLogger.isLoggingEnabled {
             SimpleLogger.logMessage(message, item: item, withLogLevel: logLevel)
         }
     }
     
     /** Prints glyph prefixed `message` and passed `item` if any */
-    private static func logMessage(message: String?, item: Any?, withLogLevel logLevel: LogLevel) {
+    private static func logMessage(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
         let prefix = " \(logLevel.emojiSymbol()) [\(Logger.getTimestamp())] \(message ?? String())"
         
         // print prefix
