@@ -33,6 +33,7 @@ public class SimpleLogger: NSObject {
     // MARK: LogLevel
     
     private enum LogLevel: UInt {
+        case Default
         case Custom
         case Debug
         case Error
@@ -45,6 +46,9 @@ public class SimpleLogger: NSObject {
         // Emojies
         private func emojiSymbol() -> String {
             switch self {
+            case .Default:
+                return "💭"
+                
             case .Custom:
                 return "💡"
                 
@@ -137,6 +141,8 @@ public class SimpleLogger: NSObject {
     // MARK: - Helpers
     
     /** Prints if `isLoggingEnabled` is set */
+    /** Logs if `isLoggingEnabled` is set */
+    @available(*, deprecated=0.1.5)
     private static func log(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
         if SimpleLogger.isLoggingEnabled {
             SimpleLogger.logMessage(message, item: item, withLogLevel: logLevel)
