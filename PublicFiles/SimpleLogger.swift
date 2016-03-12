@@ -79,6 +79,9 @@ public class SimpleLogger: NSObject {
     // logging configration
     private static var isLoggingEnabled: Bool = false
     
+    // logging emoji symbol prefix
+    private static var emojiSymbol: String = LogLevel.emojiSymbol(.Default)()
+    
     // MARK: enable / disable logging
     
     public static func enableLogging(isLoggingEnabled: Bool) {
