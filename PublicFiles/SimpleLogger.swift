@@ -226,6 +226,7 @@ public class SimpleLogger: NSObject {
             
             // print object if any
             if let validObject = object {
+                debugPrint(unsafeAddressOf(validObject), separator: " ", terminator: "\n")
                 debugPrint(validObject, separator: "", terminator: "\n\n")
             }
         }
