@@ -90,7 +90,74 @@ public class SimpleLogger: NSObject {
     
     // MARK: - logging API
     
-    /** Prints `Custom` log `message` and passed `item` if any */
+    /** Logs passed `message` in the consloe. Chainable */
+    public static func logMessage(message: String?) -> Logger.Type {
+        Logger._logMessage(message)
+        return self
+    }
+    
+    /** Logs passed `object` in the consloe. Chainable */
+    public static func logObject(object: AnyObject?) -> Logger.Type {
+        Logger._logObject(object)
+        return self
+    }
+    
+    // MARK: emoji symbol prefix update
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logDefault() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Default)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logCustom() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Custom)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logDebug() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Debug)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logError() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Error)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logWarning() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Warning)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logSuccess() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Success)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logInfo() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Info)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logNetwork() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Network)()
+        return self
+    }
+    
+    /** updates `emojiSymbol` for the next `_log()` call */
+    public static func logCache() -> Logger.Type {
+        Logger.emojiSymbol = LogLevel.emojiSymbol(.Cache)()
+        return self
+    }
+    
     // MARK: Deprecated Logging
     
     /** Logs `Custom` log `message` and passed `item` if any */
@@ -143,7 +210,27 @@ public class SimpleLogger: NSObject {
     
     // MARK: - Helpers
     
-    /** Prints if `isLoggingEnabled` is set */
+    /** Logs glyph prefixed time stamped message */
+    private static func _logMessage(message: Any?) {
+        if Logger.isLoggingEnabled {
+            let outputString = " \(Logger.emojiSymbol) [\(Logger.getTimestamp())] \(message ?? String())"
+            
+            // print prefix
+            debugPrint(outputString, separator: "", terminator: "\n")
+        }
+    }
+    
+    /** Logs glyph prefixed time stamped message */
+    private static func _logObject(object: AnyObject?) {
+        if Logger.isLoggingEnabled {
+            
+            // print object if any
+            if let validObject = object {
+                debugPrint(validObject, separator: "", terminator: "\n\n")
+            }
+        }
+    }
+    
     /** Logs if `isLoggingEnabled` is set */
     @available(*, deprecated=0.1.5)
     private static func log(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
