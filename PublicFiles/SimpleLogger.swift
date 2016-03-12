@@ -78,47 +78,58 @@ public class SimpleLogger: NSObject {
     // MARK: enable / disable logging
     
     public static func enableLogging(isLoggingEnabled: Bool) {
-        SimpleLogger.isLoggingEnabled = isLoggingEnabled
+        Logger.isLoggingEnabled = isLoggingEnabled
     }
     
     // MARK: - logging API
     
     /** Prints `Custom` log `message` and passed `item` if any */
+    // MARK: Deprecated Logging
+    
+    /** Logs `Custom` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logCustom()` with chaining some additional funcitionality")
     public static func logCustom(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Custom)
     }
     
-    /** Prints `Debug` log `message` and passed `item` if any */
+    /** Logs `Debug` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logDebug()` with chaining some additional funcitionality")
     public static func logDebug(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Debug)
     }
     
-    /** Prints `Error` log `message` and passed `item` if any */
+    /** Logs `Error` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logError()` with chaining some additional funcitionality")
     public static func logError(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Error)
     }
     
-    /** Prints `Warning` log `message` and passed `item` if any */
+    /** Logs `Warning` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logWarning()` with chaining some additional funcitionality")
     public static func logWarning(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Warning)
     }
     
-    /** Prints `Success` log `message` and passed `item` if any */
+    /** Logs `Success` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logSuccess()` with chaining some additional funcitionality")
     public static func logSuccess(message: String?, item: AnyObject?){
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Success)
     }
     
-    /** Prints `Info` log `message` and passed `item` if any */
+    /** Logs `Info` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logInfo()` with chaining some additional funcitionality")
     public static func logInfo(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Info)
     }
     
-    /** Prints `Network` log `message` and passed `item` if any */
+    /** Logs `Network` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logNetwork()` with chaining some additional funcitionality")
     public static func logNetwork(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Network)
     }
     
-    /** Prints `Cache` log `message` and passed `item` if any */
+    /** Logs `Cache` log `message` and passed `item` if any */
+    @available(*, deprecated, message="Use `logCache()` with chaining some additional funcitionality")
     public static func logCache(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Cache)
     }
@@ -132,7 +143,8 @@ public class SimpleLogger: NSObject {
         }
     }
     
-    /** Prints glyph prefixed `message` and passed `item` if any */
+    /** Logs glyph prefixed `message` and passed `item` if any */
+    @available(*, deprecated=0.1.5)
     private static func logMessage(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
         let prefix = " \(logLevel.emojiSymbol()) [\(Logger.getTimestamp())] \(message ?? String())"
         
@@ -146,7 +158,6 @@ public class SimpleLogger: NSObject {
     }
     
     private static let timestampDateTimeFormatter : NSDateFormatter = {
-        
         var formatter = NSDateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
