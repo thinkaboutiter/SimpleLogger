@@ -161,49 +161,49 @@ public class SimpleLogger: NSObject {
     // MARK: Deprecated Logging
     
     /** Logs `Custom` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logCustom()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logCustom()` and chain some additional funcitionality")
     public static func logCustom(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Custom)
     }
     
     /** Logs `Debug` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logDebug()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logDebug()` and chain some additional funcitionality")
     public static func logDebug(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Debug)
     }
     
     /** Logs `Error` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logError()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logError()` and chain some additional funcitionality")
     public static func logError(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Error)
     }
     
     /** Logs `Warning` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logWarning()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logWarning()` and chain some additional funcitionality")
     public static func logWarning(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Warning)
     }
     
     /** Logs `Success` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logSuccess()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logSuccess()` and chain some additional funcitionality")
     public static func logSuccess(message: String?, item: AnyObject?){
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Success)
     }
     
     /** Logs `Info` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logInfo()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logInfo()` and chain some additional funcitionality")
     public static func logInfo(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Info)
     }
     
     /** Logs `Network` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logNetwork()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logNetwork()` and chain some additional funcitionality")
     public static func logNetwork(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Network)
     }
     
     /** Logs `Cache` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logCache()` with chaining some additional funcitionality")
+    @available(*, deprecated, message="Use `logCache()` and chain some additional funcitionality")
     public static func logCache(message: String?, item: AnyObject?) {
         SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Cache)
     }
