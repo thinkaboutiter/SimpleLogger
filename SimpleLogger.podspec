@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "SimpleLogger"
-  s.version = "0.1.7"
+  s.version = "0.1.8"
   s.summary = "Simple logging tool"
   s.homepage = "https://github.com/thinkaboutiter/SimpleLogger"
   s.license = 'MIT'
