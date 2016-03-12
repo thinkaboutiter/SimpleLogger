@@ -250,6 +250,7 @@ public class SimpleLogger: NSObject {
         
         // print item if any
         if let item = item {
+            debugPrint(unsafeAddressOf(item), separator: " ", terminator: "\n")
             debugPrint(item, separator: "", terminator: "\n\n")
         }
     }
