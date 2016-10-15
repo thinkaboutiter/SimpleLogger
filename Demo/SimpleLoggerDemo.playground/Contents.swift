@@ -15,3 +15,18 @@ Logger.error.message(str)
 Logger.fatal.message(str)
 Logger.network.message(str)
 Logger.cache.message(str)
+
+
+let anObject: NSObject = NSObject()
+
+Logger.general.message("Logging a \(type(of: anObject))").object(anObject)
+
+let anArray: [String] = ["foo", "bar", "dee"]
+
+Logger.debug.message("Logging a \(type(of: anArray))").object(anArray)
+
+Logger.debug.object(Optional.some(32))
+
+let optionalInt: Int? = 4
+
+Logger.debug.message("optionalInt: \(optionalInt)").object(optionalInt)
