@@ -59,9 +59,9 @@ public enum SimpleLogger: String {
     
     // MARK: Life cycle
     
-    public func message(_ message: String) {
+    public func message(_ message: String) -> Logger {
         // check logging
-        guard Logger.isLoggingEnabled else { return }
+        guard Logger.isLoggingEnabled else { return self }
         
         let prefix: String
         
@@ -97,17 +97,43 @@ public enum SimpleLogger: String {
             
         default:
             // no logging
-            return
+            return self
         }
         
-        self.log(message, withPrefix: prefix)
+         return self.log(message, withPrefix: prefix)
     }
     
-    private func log(_ message: String, withPrefix prefix: String) {
-        let output: String = "\(prefix) [TimeStamp] \(message)"
+    public func object(_ object: Any?) -> Logger {
+        // check logging
+        guard Logger.isLoggingEnabled else { return self }
+        
+        return self.log(object)
+    }
+    
+    private func log(_ message: String, withPrefix prefix: String) -> Logger {
+        // TODO: get timeStamp
+        let timeStampString: String = "TimeStamp"
+        
+        let output: String = "\(prefix) [\(timeStampString)] \(message)"
         
         // log
         debugPrint(output)
+        
+        return self
+    }
+    
+    private func log(_ object: Any?) -> Logger {
+        
+        // print object if any
+        if let validObject: AnyObject = object as AnyObject? {
+            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), separator: " ", terminator: "\n")
+            debugPrint(validObject, separator: "", terminator: "\n\n")
+        }
+        else {
+            debugPrint("\(object ?? String())", separator: "", terminator: "\n\n")
+        }
+        
+        return self
     }
 }
 
