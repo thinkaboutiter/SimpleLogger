@@ -29,10 +29,9 @@ public typealias Logger = SimpleLogger
 
 public enum SimpleLogger: String {
 
-    // information
-    case general = "📝"
+    // info
+    case general = "ℹ️"
     case debug = "🔧"
-    case info = "ℹ️"
     
     // status
     case success = "✅"
@@ -64,7 +63,51 @@ public enum SimpleLogger: String {
         // check logging
         guard Logger.isLoggingEnabled else { return }
         
-        // TODO: swith over self and verbosity to produce logs or not
+        let prefix: String
+        
+        // swith over self and verbosity to produce logs or not
+        switch (Logger.verbosity, self) {
+        
+        // log information
+        case (.info, let state) where state == .general || state == .debug:
+            prefix = state.rawValue
+            
+        // log status
+        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
+            prefix = state.rawValue
+            
+        // log data
+        case (.data, let state) where state == .network || state == .cache:
+            prefix = state.rawValue
+            
+        // log info and data
+        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
+            prefix = state.rawValue
+            
+        // log info and status
+        case (.infoAndStatus, let state) where state != .network && state != .cache:
+            prefix = state.rawValue
+            
+        case (.dataAndStatus, let state) where state != .general && state != .debug:
+            prefix = state.rawValue
+
+        // log full
+        case (.full, let state):
+            prefix = state.rawValue
+            
+        default:
+            // no logging
+            return
+        }
+        
+        self.log(message, withPrefix: prefix)
+    }
+    
+    private func log(_ message: String, withPrefix prefix: String) {
+        let output: String = "\(prefix) [TimeStamp] \(message)"
+        
+        // log
+        debugPrint(output)
     }
 }
 
@@ -73,9 +116,19 @@ public enum SimpleLogger: String {
 extension SimpleLogger {
     
     public enum Verbosity {
+        
+        // single
+        case info   // log info
+        case data   // log data
+        case status // log status
+        
+        // mixed
+        case infoAndData    // log info + data
+        case infoAndStatus  // log info + status
+        case dataAndStatus  // log date + status
+        
+        // Full
         case full // log everything
-        case medium // log information + data
-        case low // log information + status
-        case veryLow // log information
+        
     }
 }
