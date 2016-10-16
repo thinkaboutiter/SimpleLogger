@@ -190,6 +190,5 @@ extension SimpleLogger {
         
         // Full
         case full // log everything
-        
     }
 }
