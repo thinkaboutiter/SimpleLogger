@@ -59,4 +59,4 @@ Logger.debug.message("optionalFloat: \(type(of: optionalFoat))").object(optional
 
 
 // logging nil
-Logger.debug.message("Logging nil: ").object(nil)
+Logger.debug.message("Logging nil:").object(nil)
