@@ -28,7 +28,7 @@ import Foundation
 public typealias Logger = SimpleLogger
 
 public enum SimpleLogger: String {
-
+    
     // info
     case general = "ℹ️"
     case debug = "🔧"
@@ -46,7 +46,7 @@ public enum SimpleLogger: String {
     // MARK: Properies, Accessors
     
     // logging configration
-    private static var isLoggingEnabled: Bool = false
+    fileprivate static var isLoggingEnabled: Bool = false
     
     /**
      Enable / Disable logging
@@ -57,7 +57,7 @@ public enum SimpleLogger: String {
     }
     
     // verbosity
-    private static var verbosity: Logger.Verbosity = .full
+    fileprivate static var verbosity: Logger.Verbosity = .full
     
     /**
      Changes verbosity level
@@ -72,102 +72,116 @@ public enum SimpleLogger: String {
     /**
      Logging a message
      - parameter message: The message to be logged
-     - returns: Logger instance so additional logging methods can be chained
+     - returns: Logger instance so additional logging methods can be chained if needed
      */
+    @discardableResult
     public func message(_ message: String) -> Logger {
         // check logging
-        guard Logger.isLoggingEnabled else { return self }
+        guard self.shouldLog() else { return self }
         
-        let prefix: String
-        
-        // swith over self and verbosity to produce logs or not
-        switch (Logger.verbosity, self) {
-        
-        // log information
-        case (.info, let state) where state == .general || state == .debug:
-            prefix = state.rawValue
-            
-        // log status
-        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
-            prefix = state.rawValue
-            
-        // log data
-        case (.data, let state) where state == .network || state == .cache:
-            prefix = state.rawValue
-            
-        // log info and data
-        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
-            prefix = state.rawValue
-            
-        // log info and status
-        case (.infoAndStatus, let state) where state != .network && state != .cache:
-            prefix = state.rawValue
-            
-        case (.dataAndStatus, let state) where state != .general && state != .debug:
-            prefix = state.rawValue
-
-        // log full
-        case (.full, let state):
-            prefix = state.rawValue
-            
-        default:
-            // no logging
-            return self
-        }
-        
-         return self.log(message, withPrefix: prefix)
+        // log message
+        return self.log(message)
     }
     
     /**
      Logging an object
      - parameter object: The object to be logged
-     - returns: Logger instance so additional logging methods can be chained
+     - returns: Logger instance so additional logging methods can be chained if needed
      */
+    @discardableResult
     public func object(_ object: Any?) -> Logger {
         // check logging
-        guard Logger.isLoggingEnabled else { return self }
+        guard self.shouldLog() else { return self }
         
+        // log object
         return self.log(object)
     }
     
     // MARK: - private
     
-    /// Logging message with prefix
-    private func log(_ message: String, withPrefix prefix: String) -> Logger {
+    fileprivate func shouldLog() -> Bool {
+        // check logging
+        guard Logger.isLoggingEnabled else { return false }
+        
+        // swith over self and verbosity to produce logs or not
+        switch (Logger.verbosity, self) {
+            
+        // log info
+        case (.info, let state) where state == .general || state == .debug:
+            return true
+            
+        // log status
+        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
+            return true
+            
+        // log data
+        case (.data, let state) where state == .network || state == .cache:
+            return true
+            
+        // log info and data
+        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
+            return true
+            
+        // log info and status
+        case (.infoAndStatus, let state) where state != .network && state != .cache:
+            return true
+            
+        // log data and status
+        case (.dataAndStatus, let state) where state != .general && state != .debug:
+            return true
+            
+        // log full
+        case (.full, _):
+            return true
+            
+        default:
+            // no logging
+            return false
+        }
+    }
+    
+    fileprivate func prefix() -> String {
         // get timeStamp
         let timeStampString: String = Logger.timestamp()
-        let output: String = "\(prefix) [\(timeStampString)] \(message)"
+        let prefix: String = "\(self.rawValue) [\(timeStampString)]"
         
+        return prefix
+    }
+    
+    /// Logging message with prefix
+    @discardableResult
+    fileprivate func log(_ message: String) -> Logger {
         // log
-        debugPrint(output)
+        debugPrint(self.prefix(), message, separator: " ", terminator: "\n")
         
         return self
     }
     
     /// Logging object
-    private func log(_ object: Any?) -> Logger {
-        
+    @discardableResult
+    fileprivate func log(_ object: Any?) -> Logger {
         // check object
         if let validObject: AnyObject = object as AnyObject? {
             debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), separator: " ", terminator: "\n")
-            debugPrint(validObject, separator: "", terminator: "\n\n")
+            debugPrint(validObject, separator: " ", terminator: "\n\n")
         }
         else {
-            debugPrint("\(object)", separator: "", terminator: "\n\n")
+            debugPrint(object, separator: " ", terminator: "\n\n")
         }
         
         return self
     }
     
     // MARK: Timestamp
-    private static let dateFormatter: DateFormatter = {
+    
+    fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    private static func timestamp() -> String {
+    fileprivate static func timestamp() -> String {
         return Logger.dateFormatter.string(from: Date())
     }
 }
