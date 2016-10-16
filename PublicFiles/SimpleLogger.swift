@@ -46,7 +46,7 @@ public enum SimpleLogger: String {
     // MARK: Properies, Accessors
     
     // logging configration
-    private static var isLoggingEnabled: Bool = false
+    fileprivate static var isLoggingEnabled: Bool = false
     
     /**
      Enable / Disable logging
@@ -57,7 +57,7 @@ public enum SimpleLogger: String {
     }
     
     // verbosity
-    private static var verbosity: Logger.Verbosity = .full
+    fileprivate static var verbosity: Logger.Verbosity = .full
     
     /**
      Changes verbosity level
@@ -133,7 +133,7 @@ public enum SimpleLogger: String {
     // MARK: - private
     
     /// Logging message with prefix
-    private func log(_ message: String, withPrefix prefix: String) -> Logger {
+    fileprivate func log(_ message: String, withPrefix prefix: String) -> Logger {
         // get timeStamp
         let timeStampString: String = Logger.timestamp()
         let output: String = "\(prefix) [\(timeStampString)] \(message)"
@@ -145,7 +145,7 @@ public enum SimpleLogger: String {
     }
     
     /// Logging object
-    private func log(_ object: Any?) -> Logger {
+    fileprivate func log(_ object: Any?) -> Logger {
         
         // check object
         if let validObject: AnyObject = object as AnyObject? {
@@ -160,14 +160,14 @@ public enum SimpleLogger: String {
     }
     
     // MARK: Timestamp
-    private static let dateFormatter: DateFormatter = {
+    fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    private static func timestamp() -> String {
+    fileprivate static func timestamp() -> String {
         return Logger.dateFormatter.string(from: Date())
     }
 }
