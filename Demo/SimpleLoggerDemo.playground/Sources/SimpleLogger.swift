@@ -47,18 +47,33 @@ public enum SimpleLogger: String {
     
     // logging configration
     private static var isLoggingEnabled: Bool = false
+    
+    /**
+     Enable / Disable logging
+     - parameter _: boolean flag to enable / disable logging
+     */
     public static func enableLogging(_ newValue: Bool) {
         Logger.isLoggingEnabled = newValue
     }
     
     // verbosity
     private static var verbosity: Logger.Verbosity = .full
+    
+    /**
+     Changes verbosity level
+     - parameter _: New verbosity level
+     */
     public static func useVerbosity(_ newValue: Logger.Verbosity) {
         Logger.verbosity = newValue
     }
     
     // MARK: Life cycle
     
+    /**
+     Logging a message
+     - parameter message: The message to be logged
+     - returns: Logger instance so additional logging methods can be chained
+     */
     public func message(_ message: String) -> Logger {
         // check logging
         guard Logger.isLoggingEnabled else { return self }
@@ -103,6 +118,11 @@ public enum SimpleLogger: String {
          return self.log(message, withPrefix: prefix)
     }
     
+    /**
+     Logging an object
+     - parameter object: The object to be logged
+     - returns: Logger instance so additional logging methods can be chained
+     */
     public func object(_ object: Any?) -> Logger {
         // check logging
         guard Logger.isLoggingEnabled else { return self }
@@ -110,10 +130,12 @@ public enum SimpleLogger: String {
         return self.log(object)
     }
     
+    // MARK: - private
+    
+    /// Logging message with prefix
     private func log(_ message: String, withPrefix prefix: String) -> Logger {
-        // TODO: get timeStamp
-        let timeStampString: String = "TimeStamp"
-        
+        // get timeStamp
+        let timeStampString: String = Logger.timestamp()
         let output: String = "\(prefix) [\(timeStampString)] \(message)"
         
         // log
@@ -122,18 +144,31 @@ public enum SimpleLogger: String {
         return self
     }
     
+    /// Logging object
     private func log(_ object: Any?) -> Logger {
         
-        // print object if any
+        // check object
         if let validObject: AnyObject = object as AnyObject? {
             debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), separator: " ", terminator: "\n")
             debugPrint(validObject, separator: "", terminator: "\n\n")
         }
         else {
-            debugPrint("\(object ?? String())", separator: "", terminator: "\n\n")
+            debugPrint("\(object)", separator: "", terminator: "\n\n")
         }
         
         return self
+    }
+    
+    // MARK: Timestamp
+    private static let dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    private static func timestamp() -> String {
+        return Logger.dateFormatter.string(from: Date())
     }
 }
 
