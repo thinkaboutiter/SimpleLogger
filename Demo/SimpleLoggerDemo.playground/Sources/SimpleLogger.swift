@@ -28,7 +28,7 @@ import Foundation
 public typealias Logger = SimpleLogger
 
 public enum SimpleLogger: String {
-    
+
     // info
     case general = "ℹ️"
     case debug = "🔧"
@@ -82,7 +82,7 @@ public enum SimpleLogger: String {
         
         // swith over self and verbosity to produce logs or not
         switch (Logger.verbosity, self) {
-            
+        
         // log information
         case (.info, let state) where state == .general || state == .debug:
             prefix = state.rawValue
@@ -105,7 +105,7 @@ public enum SimpleLogger: String {
             
         case (.dataAndStatus, let state) where state != .general && state != .debug:
             prefix = state.rawValue
-            
+
         // log full
         case (.full, let state):
             prefix = state.rawValue
@@ -115,7 +115,7 @@ public enum SimpleLogger: String {
             return self
         }
         
-        return self.log(message, withPrefix: prefix)
+         return self.log(message, withPrefix: prefix)
     }
     
     /**
