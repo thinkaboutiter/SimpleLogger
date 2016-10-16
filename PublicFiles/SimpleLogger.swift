@@ -22,248 +22,173 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
+
 import Foundation
 
 public typealias Logger = SimpleLogger
 
-// MARK: - SimpleLogger
-
-public class SimpleLogger: NSObject {
+public enum SimpleLogger: String {
     
-    // MARK: LogLevel
+    // info
+    case general = "ℹ️"
+    case debug = "🔧"
     
-    private enum LogLevel: UInt {
-        case Default
-        case Custom
-        case Debug
-        case Error
-        case Warning
-        case Success
-        case Info
-        case Network
-        case Cache
-        
-        // Emojies
-        private func emojiSymbol() -> String {
-            switch self {
-            case .Default:
-                return "💭"
-                
-            case .Custom:
-                return "💡"
-                
-            case .Debug:
-                return "🔧"
-                
-            case .Error:
-                return "❌"
-                
-            case .Warning:
-                return "⚠️"
-                
-            case .Success:
-                return "✅"
-                
-            case .Info:
-                return "ℹ️"
-                
-            case .Network:
-                return "🌎"
-                
-            case .Cache:
-                return "📀"
-            }
-        }
-    }
+    // status
+    case success = "✅"
+    case warning = "⚠️"
+    case error = "❌"
+    case fatal = "💀"
+    
+    // data
+    case network = "🌎"
+    case cache = "📀"
+    
+    // MARK: Properies, Accessors
     
     // logging configration
     private static var isLoggingEnabled: Bool = false
     
-    // logging emoji symbol prefix
-    private static var emojiSymbol: String = LogLevel.emojiSymbol(.Default)()
-    
-    // MARK: enable / disable logging
-    
-    public static func enableLogging(isLoggingEnabled: Bool) {
-        Logger.isLoggingEnabled = isLoggingEnabled
+    /**
+     Enable / Disable logging
+     - parameter _: boolean flag to enable / disable logging
+     */
+    public static func enableLogging(_ newValue: Bool) {
+        Logger.isLoggingEnabled = newValue
     }
     
-    // MARK: - logging API
+    // verbosity
+    private static var verbosity: Logger.Verbosity = .full
     
-    /** Logs passed `message` in the consloe. Chainable */
-    public static func logMessage(message: String?) -> Logger.Type {
-        Logger._logMessage(message)
-        return self
+    /**
+     Changes verbosity level
+     - parameter _: New verbosity level
+     */
+    public static func useVerbosity(_ newValue: Logger.Verbosity) {
+        Logger.verbosity = newValue
     }
     
-    /** Logs passed `object` in the consloe. Chainable */
-    public static func logObject(object: AnyObject?) -> Logger.Type {
-        Logger._logObject(object)
-        return self
-    }
+    // MARK: Life cycle
     
-    // MARK: emoji symbol prefix update
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logDefault() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Default)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logCustom() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Custom)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logDebug() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Debug)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logError() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Error)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logWarning() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Warning)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logSuccess() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Success)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logInfo() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Info)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logNetwork() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Network)()
-        return self
-    }
-    
-    /** updates `emojiSymbol` for the next `_log()` call */
-    public static func logCache() -> Logger.Type {
-        Logger.emojiSymbol = LogLevel.emojiSymbol(.Cache)()
-        return self
-    }
-    
-    // MARK: Deprecated Logging
-    
-    /** Logs `Custom` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logCustom()` and chain some additional funcitionality")
-    public static func logCustom(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Custom)
-    }
-    
-    /** Logs `Debug` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logDebug()` and chain some additional funcitionality")
-    public static func logDebug(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Debug)
-    }
-    
-    /** Logs `Error` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logError()` and chain some additional funcitionality")
-    public static func logError(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Error)
-    }
-    
-    /** Logs `Warning` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logWarning()` and chain some additional funcitionality")
-    public static func logWarning(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Warning)
-    }
-    
-    /** Logs `Success` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logSuccess()` and chain some additional funcitionality")
-    public static func logSuccess(message: String?, item: AnyObject?){
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Success)
-    }
-    
-    /** Logs `Info` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logInfo()` and chain some additional funcitionality")
-    public static func logInfo(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Info)
-    }
-    
-    /** Logs `Network` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logNetwork()` and chain some additional funcitionality")
-    public static func logNetwork(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Network)
-    }
-    
-    /** Logs `Cache` log `message` and passed `item` if any */
-    @available(*, deprecated, message="Use `logCache()` and chain some additional funcitionality")
-    public static func logCache(message: String?, item: AnyObject?) {
-        SimpleLogger.log(message, item: item, withLogLevel: LogLevel.Cache)
-    }
-    
-    // MARK: - Helpers
-    
-    /** Logs glyph prefixed time stamped message */
-    private static func _logMessage(message: Any?) {
-        if Logger.isLoggingEnabled {
-            let outputString = " \(Logger.emojiSymbol) [\(Logger.getTimestamp())] \(message ?? String())"
-            
-            // print prefix
-            debugPrint(outputString, separator: "", terminator: "\n")
-        }
-    }
-    
-    /** Logs glyph prefixed time stamped message */
-    private static func _logObject(object: AnyObject?) {
-        if Logger.isLoggingEnabled {
-            
-            // print object if any
-            if let validObject = object {
-                debugPrint(unsafeAddressOf(validObject), separator: " ", terminator: "\n")
-                debugPrint(validObject, separator: "", terminator: "\n\n")
-            }
-        }
-    }
-    
-    /** Logs if `isLoggingEnabled` is set */
-    @available(*, deprecated=0.1.5)
-    private static func log(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
-        if SimpleLogger.isLoggingEnabled {
-            SimpleLogger.logMessage(message, item: item, withLogLevel: logLevel)
-        }
-    }
-    
-    /** Logs glyph prefixed `message` and passed `item` if any */
-    @available(*, deprecated=0.1.5)
-    private static func logMessage(message: String?, item: AnyObject?, withLogLevel logLevel: LogLevel) {
-        let prefix = " \(logLevel.emojiSymbol()) [\(Logger.getTimestamp())] \(message ?? String())"
+    /**
+     Logging a message
+     - parameter message: The message to be logged
+     - returns: Logger instance so additional logging methods can be chained
+     */
+    public func message(_ message: String) -> Logger {
+        // check logging
+        guard Logger.isLoggingEnabled else { return self }
         
-        // print prefix
-        debugPrint(prefix, separator: "", terminator: "\n")
+        let prefix: String
         
-        // print item if any
-        if let item = item {
-            debugPrint(unsafeAddressOf(item), separator: " ", terminator: "\n")
-            debugPrint(item, separator: "", terminator: "\n\n")
+        // swith over self and verbosity to produce logs or not
+        switch (Logger.verbosity, self) {
+            
+        // log information
+        case (.info, let state) where state == .general || state == .debug:
+            prefix = state.rawValue
+            
+        // log status
+        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
+            prefix = state.rawValue
+            
+        // log data
+        case (.data, let state) where state == .network || state == .cache:
+            prefix = state.rawValue
+            
+        // log info and data
+        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
+            prefix = state.rawValue
+            
+        // log info and status
+        case (.infoAndStatus, let state) where state != .network && state != .cache:
+            prefix = state.rawValue
+            
+        case (.dataAndStatus, let state) where state != .general && state != .debug:
+            prefix = state.rawValue
+            
+        // log full
+        case (.full, let state):
+            prefix = state.rawValue
+            
+        default:
+            // no logging
+            return self
         }
+        
+        return self.log(message, withPrefix: prefix)
     }
     
-    private static let timestampDateTimeFormatter : NSDateFormatter = {
-        var formatter = NSDateFormatter()
+    /**
+     Logging an object
+     - parameter object: The object to be logged
+     - returns: Logger instance so additional logging methods can be chained
+     */
+    public func object(_ object: Any?) -> Logger {
+        // check logging
+        guard Logger.isLoggingEnabled else { return self }
+        
+        return self.log(object)
+    }
+    
+    // MARK: - private
+    
+    /// Logging message with prefix
+    private func log(_ message: String, withPrefix prefix: String) -> Logger {
+        // get timeStamp
+        let timeStampString: String = Logger.timestamp()
+        let output: String = "\(prefix) [\(timeStampString)] \(message)"
+        
+        // log
+        debugPrint(output)
+        
+        return self
+    }
+    
+    /// Logging object
+    private func log(_ object: Any?) -> Logger {
+        
+        // check object
+        if let validObject: AnyObject = object as AnyObject? {
+            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), separator: " ", terminator: "\n")
+            debugPrint(validObject, separator: "", terminator: "\n\n")
+        }
+        else {
+            debugPrint("\(object)", separator: "", terminator: "\n\n")
+        }
+        
+        return self
+    }
+    
+    // MARK: Timestamp
+    private static let dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
-        formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    private static func getTimestamp() -> String {
-        return SimpleLogger.timestampDateTimeFormatter.stringFromDate(NSDate())
+    private static func timestamp() -> String {
+        return Logger.dateFormatter.string(from: Date())
+    }
+}
+
+// MARK: - Verbosity
+
+extension SimpleLogger {
+    
+    public enum Verbosity {
+        
+        // single
+        case info   // log info
+        case data   // log data
+        case status // log status
+        
+        // mixed
+        case infoAndData    // log info + data
+        case infoAndStatus  // log info + status
+        case dataAndStatus  // log date + status
+        
+        // Full
+        case full // log everything
     }
 }
