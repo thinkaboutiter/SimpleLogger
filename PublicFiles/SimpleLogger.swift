@@ -56,6 +56,16 @@ public enum SimpleLogger: String {
         Logger.isLoggingEnabled = newValue
     }
     
+    // location prefix
+    fileprivate static var shouldUseLocationPrefix: Bool = true
+    /**
+     Enable / Disable locationPrefix - file, function and line where the log is called from
+     - parameter _: boolean flag to enable / disable locationPrefix
+     */
+    public static func enableLocationPrefix(_ newValue: Bool) {
+        Logger.shouldUseLocationPrefix = newValue
+    }
+    
     // verbosity
     fileprivate static var verbosity: Logger.Verbosity = .full
     
@@ -67,6 +77,17 @@ public enum SimpleLogger: String {
         Logger.verbosity = newValue
     }
     
+    // delimiter
+    fileprivate static var delimiter: String = "»"
+    
+    /**
+     Changes the delimiter string
+     - parameter _: New delimiter string
+     */
+    public static func useDelimiter(_ newValue: String) {
+        Logger.delimiter = newValue
+    }
+    
     // MARK: Life cycle
     
     /**
@@ -75,12 +96,26 @@ public enum SimpleLogger: String {
      - returns: Logger instance so additional logging methods can be chained if needed
      */
     @discardableResult
-    public func message(_ message: String) -> Logger {
+    public func message(_ message: String, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
         // check logging
         guard self.shouldLog() else { return self }
         
+        // location prefix with format [file, function, line]
+        let locationPrefix: String?
+        
+        // check if `locationPrefix` should be included
+        if Logger.shouldUseLocationPrefix {
+            
+            // create locationInfix
+            let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
+            locationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
+        }
+        else {
+            locationPrefix = nil
+        }
+        
         // log message
-        return self.log(message)
+        return self.log(message, withLocationPrefix: locationPrefix)
     }
     
     /**
@@ -140,7 +175,7 @@ public enum SimpleLogger: String {
         }
     }
     
-    fileprivate func prefix() -> String {
+    fileprivate func emojiTimePrefix() -> String {
         // get timeStamp
         let timeStampString: String = Logger.timestamp()
         let prefix: String = "\(self.rawValue) [\(timeStampString)]"
@@ -150,9 +185,16 @@ public enum SimpleLogger: String {
     
     /// Logging message with prefix
     @discardableResult
-    fileprivate func log(_ message: String) -> Logger {
+    fileprivate func log(_ message: String, withLocationPrefix locationPrefix: String?) -> Logger {
+        
         // log
-        debugPrint(self.prefix(), message, separator: " ", terminator: "\n")
+        // check for `locationPrefix`
+        if let _ = locationPrefix {
+            debugPrint("\(self.emojiTimePrefix()) \(locationPrefix!) \(Logger.delimiter) \(message)", terminator: "\n")
+        }
+        else {
+            debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message)", terminator: "\n")
+        }
         
         return self
     }
@@ -162,11 +204,11 @@ public enum SimpleLogger: String {
     fileprivate func log(_ object: Any?) -> Logger {
         // check object
         if let validObject: AnyObject = object as AnyObject? {
-            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), separator: " ", terminator: "\n")
-            debugPrint(validObject, separator: " ", terminator: "\n\n")
+            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), terminator: "\n")
+            debugPrint(validObject, terminator: "\n\n")
         }
         else {
-            debugPrint(object, separator: " ", terminator: "\n\n")
+            debugPrint(object, terminator: "\n\n")
         }
         
         return self
