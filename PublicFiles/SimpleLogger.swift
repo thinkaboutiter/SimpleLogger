@@ -96,7 +96,7 @@ public enum SimpleLogger: String {
      - returns: Logger instance so additional logging methods can be chained if needed
      */
     @discardableResult
-    public func message(_ message: String, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
+    public func message(_ message: String? = nil, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
         // check logging
         guard self.shouldLog() else { return self }
         
@@ -185,7 +185,7 @@ public enum SimpleLogger: String {
     
     /// Logging message with prefix
     @discardableResult
-    fileprivate func log(_ message: String, withLocationPrefix locationPrefix: String?) -> Logger {
+    fileprivate func log(_ message: String?, withSourceLocationPrefix sourceLocationPrefix: String?) -> Logger {
         
         // log
         // check for `locationPrefix`
@@ -193,7 +193,7 @@ public enum SimpleLogger: String {
             debugPrint("\(self.emojiTimePrefix()) \(sourceLocationPrefix!) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
         }
         else {
-            debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message)", terminator: "\n")
+            debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
         }
         
         return self
