@@ -57,13 +57,13 @@ public enum SimpleLogger: String {
     }
     
     // location prefix
-    fileprivate static var shouldUseLocationPrefix: Bool = true
+    fileprivate static var shouldUseSourceLocationPrefix: Bool = true
     /**
      Enable / Disable locationPrefix - file, function and line where the log is called from
      - parameter _: boolean flag to enable / disable locationPrefix
      */
-    public static func enableLocationPrefix(_ newValue: Bool) {
-        Logger.shouldUseLocationPrefix = newValue
+    public static func enableSourceLocationPrefix(_ newValue: Bool) {
+        Logger.shouldUseSourceLocationPrefix = newValue
     }
     
     // verbosity
@@ -101,21 +101,21 @@ public enum SimpleLogger: String {
         guard self.shouldLog() else { return self }
         
         // location prefix with format [file, function, line]
-        let locationPrefix: String?
+        let sourceLocationPrefix: String?
         
         // check if `locationPrefix` should be included
-        if Logger.shouldUseLocationPrefix {
+        if Logger.shouldUseSourceLocationPrefix {
             
             // create locationInfix
             let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
-            locationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
+            sourceLocationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
         }
         else {
-            locationPrefix = nil
+            sourceLocationPrefix = nil
         }
         
         // log message
-        return self.log(message, withLocationPrefix: locationPrefix)
+        return self.log(message, withSourceLocationPrefix: sourceLocationPrefix)
     }
     
     /**
@@ -189,8 +189,8 @@ public enum SimpleLogger: String {
         
         // log
         // check for `locationPrefix`
-        if let _ = locationPrefix {
-            debugPrint("\(self.emojiTimePrefix()) \(locationPrefix!) \(Logger.delimiter) \(message)", terminator: "\n")
+        if let _ = sourceLocationPrefix {
+            debugPrint("\(self.emojiTimePrefix()) \(sourceLocationPrefix!) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
         }
         else {
             debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message)", terminator: "\n")
