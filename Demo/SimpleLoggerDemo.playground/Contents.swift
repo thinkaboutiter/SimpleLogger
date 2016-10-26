@@ -11,7 +11,7 @@ Logger.enableLogging(true)
 Logger.useVerbosity(.full)
 
 // disable location prefix (since we are in a playground it does not make much help)
-Logger.enableLocationPrefix(false)
+Logger.enableSourceLocationPrefix(false)
 
 // test logging a message
 Logger.general.message(str)
