@@ -202,14 +202,9 @@ public enum SimpleLogger: String {
     /// Logging object
     @discardableResult
     fileprivate func log(_ object: Any?) -> Logger {
-        // check object
-        if let validObject: AnyObject = object as AnyObject? {
-            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), terminator: "\n")
-            debugPrint(validObject, terminator: "\n\n")
-        }
-        else {
-            debugPrint(object, terminator: "\n\n")
-        }
+        
+        debugPrint(Unmanaged.passUnretained(object as AnyObject).toOpaque(), terminator: "\n")
+        debugPrint(object as AnyObject, terminator: "\n\n")
         
         return self
     }
