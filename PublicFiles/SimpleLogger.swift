@@ -127,7 +127,7 @@ public enum SimpleLogger: String {
     public func object(_ object: Any?) -> Logger {
         // check logging
         guard self.shouldLog() else { return self }
-
+        
         // log object
         return self.log(object)
     }
@@ -140,7 +140,7 @@ public enum SimpleLogger: String {
         
         // swith over self and verbosity to produce logs or not
         switch (Logger.verbosity, self) {
-
+            
         // log info
         case (.info, let state) where state == .general || state == .debug:
             return true
@@ -148,23 +148,23 @@ public enum SimpleLogger: String {
         // log status
         case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
             return true
-
+            
         // log data
         case (.data, let state) where state == .network || state == .cache:
             return true
-
+            
         // log info and data
         case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
             return true
-
+            
         // log info and status
         case (.infoAndStatus, let state) where state != .network && state != .cache:
             return true
-
+            
         // log data and status
         case (.dataAndStatus, let state) where state != .general && state != .debug:
             return true
-
+            
         // log full
         case (.full, _):
             return true
@@ -179,7 +179,7 @@ public enum SimpleLogger: String {
         // get timeStamp
         let timeStampString: String = Logger.timestamp()
         let prefix: String = "\(self.rawValue) [\(timeStampString)]"
-
+        
         return prefix
     }
     
@@ -202,14 +202,9 @@ public enum SimpleLogger: String {
     /// Logging object
     @discardableResult
     fileprivate func log(_ object: Any?) -> Logger {
-        // check object
-        if let validObject: AnyObject = object as? AnyObject {
-            debugPrint(Unmanaged.passUnretained(validObject).toOpaque(), terminator: "\n")
-            debugPrint(validObject, terminator: "\n\n")
-        }
-        else {
-            debugPrint(object, terminator: "\n\n")
-        }
+        
+        debugPrint(Unmanaged.passUnretained(object as AnyObject).toOpaque(), terminator: "\n")
+        debugPrint(object as AnyObject, terminator: "\n\n")
         
         return self
     }
