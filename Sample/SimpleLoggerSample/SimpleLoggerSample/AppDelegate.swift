@@ -105,6 +105,6 @@ extension AppDelegate {
             "key_2": "value_2",
             "key_3": "value_3"
         ]
-        Logger.debug.message("Dictionary").object(sampleDictionary)
+        Logger.debug.message("Dictionary:").object(sampleDictionary)
     }
 }
