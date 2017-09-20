@@ -1,6 +1,6 @@
 {
   "name": "SimpleLogger",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "summary": "Simple logging tool",
   "homepage": "https://github.com/thinkaboutiter/SimpleLogger",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "source": {
     "git": "https://github.com/thinkaboutiter/SimpleLogger.git",
-    "tag": "1.1.2"
+    "tag": "1.1.3"
   },
   "platforms": {
     "ios": "9.0"
