@@ -2,7 +2,8 @@
 Simple logging tool
 
 # How to Install
-1. Add it as private pod to your `Podfile` specifying the `git` source and coresponding `tag`
+1. Add it as private pod to your `Podfile` specifying the `git` source and coresponding `tag`.
+Example:
 `pod "SimpleLogger", :git => "https://github.com/thinkaboutiter/SimpleLogger.git", :tag => "1.1.3"`
 
 # How to Configure
