@@ -6,6 +6,6 @@ target 'SimpleLoggerSample' do
   use_frameworks!
 
   # Pods for SimpleLoggerSample
-  pod "SimpleLogger", :path => "../../"
+  pod "SimpleLogger", :path => "../../../"
 
 end
