@@ -1,16 +1,16 @@
 PODS:
-  - SimpleLogger (1.2.0)
+  - SimpleLogger (1.2.1)
 
 DEPENDENCIES:
   - SimpleLogger (from `../../../`)
 
 EXTERNAL SOURCES:
   SimpleLogger:
-    :path: ../../../
+    :path: "../../../"
 
 SPEC CHECKSUMS:
-  SimpleLogger: c686aa20437de1b9b2d7840234f8d5a890931a50
+  SimpleLogger: 6d0b84ed257898cce4848a8f9416473093cf4cca
 
 PODFILE CHECKSUM: 37b99790b1b74e93bf433d1725747e4821008a0c
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.2

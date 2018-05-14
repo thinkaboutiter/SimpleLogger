@@ -49,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 // MARK: - Configurations
-
 extension AppDelegate {
     
     fileprivate func setupConfigurations() {
@@ -57,19 +56,17 @@ extension AppDelegate {
     }
     
     private func configure_simpleLogger() {
-        #if DEBUG
-            Logger.enableLogging(true)
-        #endif
+        Logger.use_verbosity(Logger.Verbosity.all.rawValue)
     }
 }
 
 // MARK: - Exercise Simple logger
-
 extension AppDelegate {
     
     fileprivate func exerciseSimpleLogger() {
         self.log_message()
         self.log_object()
+        self.log_nil()
     }
     
     private func log_message() {
@@ -106,5 +103,9 @@ extension AppDelegate {
             "key_3": "value_3"
         ]
         Logger.debug.message("Dictionary:").object(sampleDictionary)
+    }
+    
+    private func log_nil() {
+        Logger.debug.message("Logging nil:").object(nil)
     }
 }
