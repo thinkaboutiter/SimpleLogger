@@ -43,7 +43,7 @@ public enum SimpleLogger: String {
     case network = "🌎"
     case cache = "📀"
     
-    // MARK: Properies, Accessors
+    // MARK: Properies
     
     // logging configration
     fileprivate static var isLoggingEnabled: Bool = false
@@ -67,7 +67,7 @@ public enum SimpleLogger: String {
     }
     
     // verbosity
-    fileprivate static var verbosity: Logger.Verbosity = .full
+    fileprivate static var verbosity: Logger.Verbosity = .all
     
     /**
      Changes verbosity level
@@ -140,35 +140,6 @@ public enum SimpleLogger: String {
         
         // swith over self and verbosity to produce logs or not
         switch (Logger.verbosity, self) {
-            
-        // log info
-        case (.info, let state) where state == .general || state == .debug:
-            return true
-            
-        // log status
-        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
-            return true
-            
-        // log data
-        case (.data, let state) where state == .network || state == .cache:
-            return true
-            
-        // log info and data
-        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
-            return true
-            
-        // log info and status
-        case (.infoAndStatus, let state) where state != .network && state != .cache:
-            return true
-            
-        // log data and status
-        case (.dataAndStatus, let state) where state != .general && state != .debug:
-            return true
-            
-        // log full
-        case (.full, _):
-            return true
-            
         default:
             // no logging
             return false
@@ -210,7 +181,6 @@ public enum SimpleLogger: String {
     }
     
     // MARK: Timestamp
-    
     fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
@@ -224,22 +194,25 @@ public enum SimpleLogger: String {
 }
 
 // MARK: - Verbosity
-
 extension SimpleLogger {
     
-    public enum Verbosity {
+    public enum Verbosity: UInt32 {
+        // none/all
+        case none =         0x0000_0000
+        case all =          0xFF
         
-        // single
-        case info   // log info
-        case data   // log data
-        case status // log status
+        // info
+        case general =      0x0000_0001
+        case debug =        0x0000_0002
         
-        // mixed
-        case infoAndData    // log info + data
-        case infoAndStatus  // log info + status
-        case dataAndStatus  // log date + status
+        // status
+        case success =      0x0000_0004
+        case warning =      0x0000_0008
+        case error =        0x0000_0010
+        case fatal =        0x0000_0020
         
-        // Full
-        case full // log everything
+        // data
+        case network =      0x0000_0040
+        case cache =        0x0000_0080
     }
 }
