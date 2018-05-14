@@ -27,6 +27,7 @@ import Foundation
 
 public typealias Logger = SimpleLogger
 
+/// Enum used for loggin messages and(or) objects/values.
 public enum SimpleLogger: String {
     
     // info
@@ -43,174 +44,56 @@ public enum SimpleLogger: String {
     case network = "🌎"
     case cache = "📀"
     
-    // MARK: Properies, Accessors
-    
-    // logging configration
-    fileprivate static var isLoggingEnabled: Bool = false
-    
-    /**
-     Enable / Disable logging
-     - parameter _: boolean flag to enable / disable logging
-     */
-    public static func enableLogging(_ newValue: Bool) {
-        Logger.isLoggingEnabled = newValue
+    // MARK: Properies
+    fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
+    public static func use_verbosity(_ newValue: UInt32) {
+        Logger.verbosityLevel = newValue
     }
     
-    // location prefix
-    fileprivate static var shouldUseSourceLocationPrefix: Bool = true
-    /**
-     Enable / Disable locationPrefix - file, function and line where the log is called from
-     - parameter _: boolean flag to enable / disable locationPrefix
-     */
-    public static func enableSourceLocationPrefix(_ newValue: Bool) {
-        Logger.shouldUseSourceLocationPrefix = newValue
-    }
-    
-    // verbosity
-    fileprivate static var verbosity: Logger.Verbosity = .full
-    
-    /**
-     Changes verbosity level
-     - parameter _: New verbosity level
-     */
-    public static func useVerbosity(_ newValue: Logger.Verbosity) {
-        Logger.verbosity = newValue
-    }
-    
-    // delimiter
-    fileprivate static var delimiter: String = "»"
-    
-    /**
-     Changes the delimiter string
-     - parameter _: New delimiter string
-     */
-    public static func useDelimiter(_ newValue: String) {
+    fileprivate(set) public static var delimiter: String = "»"
+    public static func use_delimiter(_ newValue: String) {
         Logger.delimiter = newValue
     }
     
-    // MARK: Life cycle
-    
-    /**
-     Logging a message
-     - parameter message: The message to be logged
-     - returns: Logger instance so additional logging methods can be chained if needed
-     */
-    @discardableResult
-    public func message(_ message: String? = nil, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
-        // check logging
-        guard self.shouldLog() else { return self }
-        
-        // location prefix with format [file, function, line]
-        let sourceLocationPrefix: String?
-        
-        // check if `locationPrefix` should be included
-        if Logger.shouldUseSourceLocationPrefix {
-            
-            // create locationInfix
-            let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
-            sourceLocationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
-        }
-        else {
-            sourceLocationPrefix = nil
-        }
-        
-        // log message
-        return self.log(message, withSourceLocationPrefix: sourceLocationPrefix)
+    fileprivate(set) public static var shouldUseSourceLocationPrefix: Bool = true
+    public static func enable_shouldUseSourceLocationPrefix(_ newValue: Bool) {
+        Logger.shouldUseSourceLocationPrefix = newValue
     }
     
-    /**
-     Logging an object
-     - parameter object: The object to be logged
-     - returns: Logger instance so additional logging methods can be chained if needed
-     */
-    @discardableResult
-    public func object(_ object: Any?) -> Logger {
-        // check logging
-        guard self.shouldLog() else { return self }
-        
-        // log object
-        return self.log(object)
-    }
-    
-    // MARK: - private
-    
-    fileprivate func shouldLog() -> Bool {
-        // check logging
-        guard Logger.isLoggingEnabled else { return false }
-        
-        // swith over self and verbosity to produce logs or not
-        switch (Logger.verbosity, self) {
-            
-        // log info
-        case (.info, let state) where state == .general || state == .debug:
-            return true
-            
-        // log status
-        case (.status, let state) where state == .success || state == .warning || state == .error || state == .fatal:
-            return true
-            
-        // log data
-        case (.data, let state) where state == .network || state == .cache:
-            return true
-            
-        // log info and data
-        case (.infoAndData, let state) where state != .success && state != .warning && state != .error && state != .fatal:
-            return true
-            
-        // log info and status
-        case (.infoAndStatus, let state) where state != .network && state != .cache:
-            return true
-            
-        // log data and status
-        case (.dataAndStatus, let state) where state != .general && state != .debug:
-            return true
-            
-        // log full
-        case (.full, _):
-            return true
-            
-        default:
-            // no logging
-            return false
-        }
-    }
-    
-    fileprivate func emojiTimePrefix() -> String {
-        // get timeStamp
+    fileprivate var emojiTimePrefix: String {
         let timeStampString: String = Logger.timestamp()
         let prefix: String = "\(self.rawValue) [\(timeStampString)]"
-        
         return prefix
     }
     
-    /// Logging message with prefix
-    @discardableResult
-    fileprivate func log(_ message: String?, withSourceLocationPrefix sourceLocationPrefix: String?) -> Logger {
-        
-        // log
-        // check for `locationPrefix`
-        if let _ = sourceLocationPrefix {
-            debugPrint("\(self.emojiTimePrefix()) \(sourceLocationPrefix!) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
+    fileprivate var _verbosity: Verbosity {
+        let resut: Verbosity
+        switch self {
+        case .general:
+            resut = Verbosity.general
+        case .debug:
+            resut = Verbosity.debug
+        case .success:
+            resut = Verbosity.success
+        case .warning:
+            resut = Verbosity.warning
+        case .error:
+            resut = Verbosity.error
+        case .fatal:
+            resut = Verbosity.fatal
+        case .network:
+            resut = Verbosity.network
+        case .cache:
+            resut = Verbosity.cache
         }
-        else {
-            debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
-        }
-        
-        return self
+        return resut
     }
     
-    /// Logging object
-    @discardableResult
-    fileprivate func log(_ object: Any?) -> Logger {
-        
-        debugPrint(Unmanaged.passUnretained(object as AnyObject).toOpaque(), terminator: "\n")
-        debugPrint(object as AnyObject, terminator: "\n\n")
-        
-        return self
+    fileprivate var shouldLog: Bool {
+        return (Logger.verbosityLevel & self._verbosity.rawValue) != 0
     }
     
     // MARK: Timestamp
-    
     fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
@@ -221,25 +104,85 @@ public enum SimpleLogger: String {
     fileprivate static func timestamp() -> String {
         return Logger.dateFormatter.string(from: Date())
     }
+    
+    // MARK: - Logging
+    /// Logging a message.
+    /// - parameter message: The message to be logged.
+    /// - parameter filePath: file in which this function is invoked.
+    /// - parameter function: the outer function in which this function is invoked.
+    /// - parameter line: the number of the line at which this function is invoked.
+    /// - returns: Logger value so additional logging methods can be chained if needed.
+    @discardableResult
+    public func message(_ message: String? = nil, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
+        guard self.shouldLog else {
+            return self
+        }
+        let sourceLocationPrefix: String?
+        
+        if Logger.shouldUseSourceLocationPrefix {
+            let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
+            sourceLocationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
+        }
+        else {
+            sourceLocationPrefix = nil
+        }
+        
+        return self.log(message, sourceLocationPrefix: sourceLocationPrefix)
+    }
+    
+    /// Logging an object.
+    /// - parameter object: the object/value to be logged.
+    /// - returns: Logger value so additional logging methods can be chained if needed.
+    @discardableResult
+    public func object(_ object: Any?) -> Logger {
+        guard self.shouldLog else {
+            return self
+        }
+        return self.log(object)
+    }
+    
+    // MARK: - Logging Utils
+    @discardableResult
+    fileprivate func log(_ message: String?, sourceLocationPrefix: String?) -> Logger {
+        let debugMessage: String
+        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
+            debugMessage = "\(self.emojiTimePrefix) \(valid_sourceLocationPrefix) \(Logger.delimiter) \(message ?? "")"
+        }
+        else {
+            debugMessage = "\(self.emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
+        }
+        debugPrint(debugMessage, terminator: "\n")
+        return self
+    }
+    
+    @discardableResult
+    fileprivate func log(_ object: Any?) -> Logger {
+        debugPrint(Unmanaged.passUnretained(object as AnyObject).toOpaque(), terminator: "\n")
+        debugPrint(object as AnyObject, terminator: "\n\n")
+        return self
+    }
 }
 
 // MARK: - Verbosity
-
 extension SimpleLogger {
     
-    public enum Verbosity {
+    public enum Verbosity: UInt32 {
+        // none/all
+        case none =         0x0000_0000
+        case all =          0xFF
         
-        // single
-        case info   // log info
-        case data   // log data
-        case status // log status
+        // info
+        case general =      0x0000_0001
+        case debug =        0x0000_0002
         
-        // mixed
-        case infoAndData    // log info + data
-        case infoAndStatus  // log info + status
-        case dataAndStatus  // log date + status
+        // status
+        case success =      0x0000_0004
+        case warning =      0x0000_0008
+        case error =        0x0000_0010
+        case fatal =        0x0000_0020
         
-        // Full
-        case full // log everything
+        // data
+        case network =      0x0000_0040
+        case cache =        0x0000_0080
     }
 }
