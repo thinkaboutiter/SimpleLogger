@@ -44,48 +44,59 @@ public enum SimpleLogger: String {
     case cache = "📀"
     
     // MARK: Properies
-    
-    // logging configration
-    fileprivate static var isLoggingEnabled: Bool = false
-    
-    /**
-     Enable / Disable logging
-     - parameter _: boolean flag to enable / disable logging
-     */
-    public static func enableLogging(_ newValue: Bool) {
-        Logger.isLoggingEnabled = newValue
+    fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
+    public static func use_verbosity(_ newValue: UInt32) {
+        Logger.verbosityLevel = newValue
     }
-    
-    // location prefix
-    fileprivate static var shouldUseSourceLocationPrefix: Bool = true
-    /**
-     Enable / Disable locationPrefix - file, function and line where the log is called from
-     - parameter _: boolean flag to enable / disable locationPrefix
-     */
-    public static func enableSourceLocationPrefix(_ newValue: Bool) {
+    fileprivate(set) public static var delimiter: String = "»"
+    public static func use_delimiter(_ newValue: String) {
+        Logger.delimiter = newValue
+    }
+    fileprivate(set) public static var shouldUseSourceLocationPrefix: Bool = true
+    public static func enable_shouldUseSourceLocationPrefix(_ newValue: Bool) {
         Logger.shouldUseSourceLocationPrefix = newValue
     }
-    
-    // verbosity
-    fileprivate static var verbosity: Logger.Verbosity = .all
-    
-    /**
-     Changes verbosity level
-     - parameter _: New verbosity level
-     */
-    public static func useVerbosity(_ newValue: Logger.Verbosity) {
-        Logger.verbosity = newValue
+    fileprivate var emojiTimePrefix: String {
+        let timeStampString: String = Logger.timestamp()
+        let prefix: String = "\(self.rawValue) [\(timeStampString)]"
+        return prefix
+    }
+    fileprivate var _verbosity: Verbosity {
+        let resut: Verbosity
+        switch self {
+        case .general:
+            resut = Verbosity.general
+        case .debug:
+            resut = Verbosity.debug
+        case .success:
+            resut = Verbosity.success
+        case .warning:
+            resut = Verbosity.warning
+        case .error:
+            resut = Verbosity.error
+        case .fatal:
+            resut = Verbosity.fatal
+        case .network:
+            resut = Verbosity.network
+        case .cache:
+            resut = Verbosity.cache
+        }
+        return resut
+    }
+    fileprivate var shouldLog: Bool {
+        return (Logger.verbosityLevel & self._verbosity.rawValue) != 0
     }
     
-    // delimiter
-    fileprivate static var delimiter: String = "»"
+    // MARK: Timestamp
+    fileprivate static let dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
     
-    /**
-     Changes the delimiter string
-     - parameter _: New delimiter string
-     */
-    public static func useDelimiter(_ newValue: String) {
-        Logger.delimiter = newValue
+    fileprivate static func timestamp() -> String {
+        return Logger.dateFormatter.string(from: Date())
     }
     
     // MARK: Life cycle
@@ -98,7 +109,7 @@ public enum SimpleLogger: String {
     @discardableResult
     public func message(_ message: String? = nil, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
         // check logging
-        guard self.shouldLog() else { return self }
+        guard self.shouldLog else { return self }
         
         // location prefix with format [file, function, line]
         let sourceLocationPrefix: String?
@@ -126,33 +137,15 @@ public enum SimpleLogger: String {
     @discardableResult
     public func object(_ object: Any?) -> Logger {
         // check logging
-        guard self.shouldLog() else { return self }
+        guard self.shouldLog else { return self }
         
         // log object
         return self.log(object)
     }
     
     // MARK: - private
+
     
-    fileprivate func shouldLog() -> Bool {
-        // check logging
-        guard Logger.isLoggingEnabled else { return false }
-        
-        // swith over self and verbosity to produce logs or not
-        switch (Logger.verbosity, self) {
-        default:
-            // no logging
-            return false
-        }
-    }
-    
-    fileprivate func emojiTimePrefix() -> String {
-        // get timeStamp
-        let timeStampString: String = Logger.timestamp()
-        let prefix: String = "\(self.rawValue) [\(timeStampString)]"
-        
-        return prefix
-    }
     
     /// Logging message with prefix
     @discardableResult
@@ -161,10 +154,10 @@ public enum SimpleLogger: String {
         // log
         // check for `locationPrefix`
         if let _ = sourceLocationPrefix {
-            debugPrint("\(self.emojiTimePrefix()) \(sourceLocationPrefix!) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
+            debugPrint("\(self.emojiTimePrefix) \(sourceLocationPrefix!) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
         }
         else {
-            debugPrint("\(self.emojiTimePrefix()) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
+            debugPrint("\(self.emojiTimePrefix) \(Logger.delimiter) \(message ?? "")", terminator: "\n")
         }
         
         return self
@@ -178,18 +171,6 @@ public enum SimpleLogger: String {
         debugPrint(object as AnyObject, terminator: "\n\n")
         
         return self
-    }
-    
-    // MARK: Timestamp
-    fileprivate static let dateFormatter: DateFormatter = {
-        var formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss.SSS"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
-    
-    fileprivate static func timestamp() -> String {
-        return Logger.dateFormatter.string(from: Date())
     }
 }
 

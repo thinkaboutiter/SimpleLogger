@@ -57,9 +57,7 @@ extension AppDelegate {
     }
     
     private func configure_simpleLogger() {
-        #if DEBUG
-            Logger.enableLogging(true)
-        #endif
+        Logger.use_verbosity(Logger.Verbosity.all.rawValue)
     }
 }
 
