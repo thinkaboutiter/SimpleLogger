@@ -159,7 +159,7 @@ public enum SimpleLogger: String {
     fileprivate func log(_ any: Any?) -> Logger {
         #if os(Linux)
         
-        guard let valid_object: AnyObject = any else {
+        guard let valid_object: AnyObject = any as? AnyObject else {
             return self
         }
         let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(valid_object).toOpaque()
