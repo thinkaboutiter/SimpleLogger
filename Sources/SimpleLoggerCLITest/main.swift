@@ -4,6 +4,13 @@ import SimpleLogger
 let messge_start: String = "Starting Simple logger excercise!"
 debugPrint("🔧 \(#file) » \(#function) » \(#line)", messge_start, separator: "\n")
 
+let array: [String] = [
+    "John",
+    "Jane",
+    "Joe"
+]
+debugPrint("test array: ", array, separator: "\n")
+
 private func log_message() {
     // info
     Logger.general.message("Logging `genereal` message")
