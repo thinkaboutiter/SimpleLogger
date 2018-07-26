@@ -157,14 +157,17 @@ public enum SimpleLogger: String {
     
     @discardableResult
     fileprivate func log(_ any: Any?) -> Logger {
-        guard let valid_any: Any = any else {
-            debugPrint(any ?? "_nil_", terminator: "\n\n")
+        #if os(Linux)
+            let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as! AnyObject).toOpaque()
+            debugPrint(pointer, terminator: "\n")
+            debugPrint(any as! AnyObject, terminator: "\n\n")
             return self
-        }
-        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(valid_any as AnyObject).toOpaque()
-        debugPrint(pointer, terminator: "\n")
-        debugPrint(valid_any as AnyObject, terminator: "\n\n")
-        return self
+        #else
+            let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
+            debugPrint(pointer, terminator: "\n")
+            debugPrint(any as AnyObject, terminator: "\n\n")
+            return self
+        #endif
     }
 }
 
