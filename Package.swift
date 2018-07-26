@@ -24,8 +24,5 @@ let package = Package(
         .target(
             name: "SimpleLoggerCLITest",
             dependencies: ["SimpleLogger"]),
-        .testTarget(
-            name: "SimpleLoggerTests",
-            dependencies: ["SimpleLogger"]),
     ]
 )
