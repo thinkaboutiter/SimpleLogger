@@ -54,4 +54,3 @@ exerciseSimpleLogger()
 
 let messge_finish: String = "Finished Simple logger excercise!"
 debugPrint("🔧 \(#file) » \(#function) » \(#line)", messge_finish, separator: "\n")
-
