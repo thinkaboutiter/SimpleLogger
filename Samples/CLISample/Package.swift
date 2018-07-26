@@ -9,8 +9,8 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(
-            url: "../../",
-            .branch("Develop")
+            url: "https://thinkaboutiter@github.com/thinkaboutiter/SimpleLogger.git",
+            .branch("develop")
         )
     ],
     targets: [
