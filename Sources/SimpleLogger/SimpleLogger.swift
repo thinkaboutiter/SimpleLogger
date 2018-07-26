@@ -158,7 +158,7 @@ public enum SimpleLogger: String {
     @discardableResult
     fileprivate func log(_ any: Any?) -> Logger {
         #if os(Linux)
-        debugPrint(any, terminator: "\n\n")
+        debugPrint(any ?? "__nil__", terminator: "\n\n")
         return self
         
         #else
