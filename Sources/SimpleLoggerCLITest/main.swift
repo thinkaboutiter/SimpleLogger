@@ -1,7 +1,8 @@
 import Foundation
 import SimpleLogger
 
-print("Hello, world!")
+let messge_start: String = "Starting Simple logger excercise!"
+debugPrint("🔧 \(#file) » \(#function) » \(#line)", messge_start, separator: "\n")
 
 private func log_message() {
     // info
@@ -50,3 +51,7 @@ private func exerciseSimpleLogger() {
 }
 
 exerciseSimpleLogger()
+
+let messge_finish: String = "Finished Simple logger excercise!"
+debugPrint("🔧 \(#file) » \(#function) » \(#line)", messge_finish, separator: "\n")
+
