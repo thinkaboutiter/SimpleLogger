@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SimpleLogger",
+        "repositoryURL": "https://thinkaboutiter@github.com/thinkaboutiter/SimpleLogger.git",
+        "state": {
+          "branch": null,
+          "revision": "f820fb790e2370f7d376f6510ccb93d5aa156110",
+          "version": "1.3.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
