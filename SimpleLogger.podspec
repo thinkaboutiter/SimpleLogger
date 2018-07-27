@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
     :tag => s.version }
   s.platform = :ios, "9.0"
   s.requires_arc = true
-  s.source_files = 'Sources/**/*'
+  s.source_files = 'Sources/SimpleLogger/*'
 end
