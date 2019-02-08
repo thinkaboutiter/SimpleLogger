@@ -66,6 +66,22 @@ public enum SimpleLogger: String {
         return prefix
     }
     
+    fileprivate(set) static var shouldLogToFile: Bool = false
+    public static func update_shouldLogToFile(_ newValue: Bool) {
+        Logger.shouldLogToFile = newValue
+    }
+    
+    public static func setLogFileName(_ newValue: String) {
+        LogWriter.shared.update_logFileName(newValue)
+    }
+    public static func setLogsDirectoryPath(_ newValue: String) {
+        LogWriter.shared.update_logsDirectoryPath(newValue)
+    }
+    
+    public static func logsDirectoryPath(from path: String) -> String {
+        return LogWriter.shared.logsDirectoryPath(from: path)
+    }
+    
     fileprivate var _verbosity: Verbosity {
         let resut: Verbosity
         switch self {
@@ -152,6 +168,10 @@ public enum SimpleLogger: String {
             debugMessage = "\(self.emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
         }
         debugPrint(debugMessage, terminator: "\n")
+        
+        if Logger.shouldLogToFile {
+            LogWriter.shared.writeToFile(debugMessage)
+        }
         return self
     }
     
