@@ -64,8 +64,8 @@
       "OBJ_16" = {
          isa = "PBXGroup";
          children = (
-            "SimpleLogger::SimpleLoggerCLITest::Product",
-            "SimpleLogger::SimpleLogger::Product"
+            "SimpleLogger::SimpleLogger::Product",
+            "SimpleLogger::SimpleLoggerCLITest::Product"
          );
          name = "Products";
          path = "";
