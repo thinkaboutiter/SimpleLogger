@@ -115,9 +115,12 @@ class LogWriter {
         guard let valid_logFilePath: String = self.logFilePath() else {
             return
         }
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: valid_logFilePath) else {
+            return
+        }
         let fileSize: UInt64 = self.fileSize(at: valid_logFilePath)
         if fileSize > self.logFileMaxSizeInBytes {
-            let fm: FileManager = FileManager.default
             do {
                 try fm.removeItem(atPath: valid_logFilePath)
             }
@@ -129,6 +132,9 @@ class LogWriter {
     
     fileprivate func fileSize(at path: String) -> UInt64 {
         let fm: FileManager = FileManager.default
+        guard fm.fileExists(atPath: path) else {
+            return 0
+        }
         guard let valid_attributes: [FileAttributeKey: Any] = try? fm.attributesOfItem(atPath: path) else {
             return 0
         }
