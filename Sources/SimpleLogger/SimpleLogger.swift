@@ -66,6 +66,34 @@ public enum SimpleLogger: String {
         return prefix
     }
     
+    fileprivate var logFile_emojiTimePrefix: String {
+        let timeStampString: String = Logger.logFile_timestamp()
+        let prefix: String = "\(self.rawValue) [\(timeStampString)]"
+        return prefix
+    }
+    
+    fileprivate(set) static var shouldLogToFile: Bool = false
+    public static func update_shouldLogToFile(_ newValue: Bool) {
+        Logger.shouldLogToFile = newValue
+    }
+    
+    fileprivate static var logWriter: LogWriter {
+        return LogWriterImpl.shared
+    }
+    
+    public static func setLogFileName(_ newValue: String) {
+        Logger.logWriter.update_logFileName(newValue)
+    }
+    public static func setLogsDirectoryPath(_ newValue: String) {
+        Logger.logWriter.update_logsDirectoryPath(newValue)
+    }
+    public static func logsDirectoryPath(from path: String) -> String {
+        return Logger.logWriter.logsDirectoryPath(from: path)
+    }
+    public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
+        Logger.logWriter.update_logFileMaxSizeInBytes(newValue)
+    }
+    
     fileprivate var _verbosity: Verbosity {
         let resut: Verbosity
         switch self {
@@ -93,7 +121,7 @@ public enum SimpleLogger: String {
         return (Logger.verbosityLevel & self._verbosity.rawValue) != 0
     }
     
-    // MARK: Timestamp
+    // MARK: Timestamps
     fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
@@ -103,6 +131,17 @@ public enum SimpleLogger: String {
     
     fileprivate static func timestamp() -> String {
         return Logger.dateFormatter.string(from: Date())
+    }
+    
+    fileprivate static let logFile_dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MMM-dd HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    fileprivate static func logFile_timestamp() -> String {
+        return Logger.logFile_dateFormatter.string(from: Date())
     }
     
     // MARK: - Logging
@@ -152,7 +191,22 @@ public enum SimpleLogger: String {
             debugMessage = "\(self.emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
         }
         debugPrint(debugMessage, terminator: "\n")
+        
+        if Logger.shouldLogToFile {
+            self.logToFile(message, sourceLocationPrefix: sourceLocationPrefix)
+        }
         return self
+    }
+    
+    fileprivate func logToFile(_ message: String?, sourceLocationPrefix: String?) {
+        let logFile_message: String
+        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
+            logFile_message = "\(self.logFile_emojiTimePrefix) \(valid_sourceLocationPrefix) \(Logger.delimiter) \(message ?? "")"
+        }
+        else {
+            logFile_message = "\(self.logFile_emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
+        }
+        Logger.logWriter.writeToFile(logFile_message)
     }
     
     @discardableResult

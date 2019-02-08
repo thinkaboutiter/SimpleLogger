@@ -29,6 +29,7 @@ private func log_object() {
         3
     ]
     Logger.debug.message("Array:").object(sampleArray)
+    Logger.debug.message("\(sampleArray)")
     
     // dictionary
     let sampleDictionary: [String: String] = [
@@ -38,6 +39,7 @@ private func log_object() {
         "key_3": "value_3"
     ]
     Logger.debug.message("Dictionary:").object(sampleDictionary)
+    Logger.debug.message("\(sampleDictionary)")
 }
 
 private func log_nil() {
@@ -50,7 +52,20 @@ private func exerciseSimpleLogger() {
     log_nil()
 }
 
-exerciseSimpleLogger()
+fileprivate func test_writing_to_file() {
+    
+    Logger.update_shouldLogToFile(true)
+    Logger.setLogFileName("application.log")
+    let directoryPath: String = Logger.logsDirectoryPath(from: #file)
+    Logger.setLogsDirectoryPath(directoryPath)
+    Logger.setLogFileMaxSizeInBytes(1024*10)
+}
+
+test_writing_to_file()
+
+for _ in 0..<10 {
+    exerciseSimpleLogger()
+}
 
 let messge_finish: String = "Finished Simple logger excercise!"
 debugPrint("🔧 \(#file) » \(#function) » \(#line)", messge_finish, separator: "\n")
