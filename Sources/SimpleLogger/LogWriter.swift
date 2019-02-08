@@ -147,7 +147,10 @@ class LogWriterImpl: LogWriter {
         guard let valid_attributes: [FileAttributeKey: Any] = try? fm.attributesOfItem(atPath: path) else {
             return 0
         }
-        return (valid_attributes as NSDictionary).fileSize()
+        guard let valid_fileSize: UInt64 = valid_attributes[FileAttributeKey.size] as? UInt64 else {
+            return 0
+        }
+        return valid_fileSize
     }
 }
 
