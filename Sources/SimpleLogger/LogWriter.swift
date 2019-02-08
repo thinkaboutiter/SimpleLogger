@@ -7,10 +7,19 @@
 
 import Foundation
 
-class LogWriter {
+protocol LogWriter: AnyObject {
+    func update_logsDirectoryPath(_ newValue: String)
+    func update_logFileName(_ newValue: String)
+    func update_logFileMaxSizeInBytes(_ newValue: UInt64)
+    func logsDirectoryPath(from path: String) -> String
+    func writeToFile(_ candidate: String)
+}
+
+class LogWriterImpl: LogWriter {
     
     // MARK: - Properties
-    static let shared: LogWriter = LogWriter()
+    static let shared: LogWriterImpl = LogWriterImpl()
+    
     fileprivate var logsDirectoryPath: String = ""
     func update_logsDirectoryPath(_ newValue: String) {
         self.logsDirectoryPath = newValue
@@ -142,7 +151,7 @@ class LogWriter {
     }
 }
 
-extension LogWriter {
+extension LogWriterImpl {
     
     fileprivate struct Constants {
         static let logsDirectoryName: String = "Logs"

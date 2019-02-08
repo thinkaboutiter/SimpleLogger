@@ -77,17 +77,21 @@ public enum SimpleLogger: String {
         Logger.shouldLogToFile = newValue
     }
     
+    fileprivate static var logWriter: LogWriter {
+        return LogWriterImpl.shared
+    }
+    
     public static func setLogFileName(_ newValue: String) {
-        LogWriter.shared.update_logFileName(newValue)
+        Logger.logWriter.update_logFileName(newValue)
     }
     public static func setLogsDirectoryPath(_ newValue: String) {
-        LogWriter.shared.update_logsDirectoryPath(newValue)
+        Logger.logWriter.update_logsDirectoryPath(newValue)
     }
     public static func logsDirectoryPath(from path: String) -> String {
-        return LogWriter.shared.logsDirectoryPath(from: path)
+        return Logger.logWriter.logsDirectoryPath(from: path)
     }
     public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
-        LogWriter.shared.update_logFileMaxSizeInBytes(newValue)
+        Logger.logWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
@@ -202,7 +206,7 @@ public enum SimpleLogger: String {
         else {
             logFile_message = "\(self.logFile_emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
         }
-        LogWriter.shared.writeToFile(logFile_message)
+        Logger.logWriter.writeToFile(logFile_message)
     }
     
     @discardableResult
