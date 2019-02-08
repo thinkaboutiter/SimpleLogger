@@ -26,6 +26,11 @@ class LogWriter {
         self.logFileName = newValue
     }
     
+    fileprivate var logFileMaxSizeInBytes: UInt64 = Constants.defaultLogFileSizeInMegabytes * Constants.bytesInMegabyte
+    func update_logFileMaxSizeInBytes(_ newValue: UInt64) {
+        self.logFileMaxSizeInBytes = newValue
+    }
+    
     /// We should have only one logs directory
     fileprivate var didCreateLogsDirectory: Bool = false
     
@@ -57,7 +62,7 @@ class LogWriter {
                 try "".write(toFile: valid_logFilePath, atomically: true, encoding: String.Encoding.utf8)
             }
             catch {
-                Logger.error.message("error:").object(error)
+                Logger.error.message("error:\(error)")
             }
         }
         guard let valid_fileHandle = FileHandle(forWritingAtPath: valid_logFilePath) else {
@@ -74,6 +79,9 @@ class LogWriter {
             return
         }
         valid_fileHandle.write(valid_data)
+        valid_fileHandle.closeFile()
+        
+        self.cleanUpIfNeeded()
     }
     
     fileprivate func createLogsDirecotry(at path: String) {
@@ -88,7 +96,7 @@ class LogWriter {
                 self.didCreateLogsDirectory = true
             }
             catch {
-                Logger.error.message("error:").object(error)
+                Logger.error.message("error:\(error)")
             }
         }
         else {
@@ -101,13 +109,39 @@ class LogWriter {
             return nil
         }
         return "\(self.logsDirectoryPath)/\(self.logFileName)"
-    }    
+    }
+    
+    fileprivate func cleanUpIfNeeded() {
+        guard let valid_logFilePath: String = self.logFilePath() else {
+            return
+        }
+        let fileSize: UInt64 = self.fileSize(at: valid_logFilePath)
+        if fileSize > self.logFileMaxSizeInBytes {
+            let fm: FileManager = FileManager.default
+            do {
+                try fm.removeItem(atPath: valid_logFilePath)
+            }
+            catch {
+                Logger.error.message("error:\(error)")
+            }
+        }
+    }
+    
+    fileprivate func fileSize(at path: String) -> UInt64 {
+        let fm: FileManager = FileManager.default
+        guard let valid_attributes: [FileAttributeKey: Any] = try? fm.attributesOfItem(atPath: path) else {
+            return 0
+        }
+        return (valid_attributes as NSDictionary).fileSize()
+    }
 }
 
 extension LogWriter {
     
     fileprivate struct Constants {
-        static let logsDirectoryName: String = "logs"
+        static let logsDirectoryName: String = "Logs"
         static let logFileDefaultName: String = "logfile"
+        static let bytesInMegabyte: UInt64 = 1024 * 1024
+        static let defaultLogFileSizeInMegabytes: UInt64 = 10
     }
 }

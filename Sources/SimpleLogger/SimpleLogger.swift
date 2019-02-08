@@ -83,9 +83,11 @@ public enum SimpleLogger: String {
     public static func setLogsDirectoryPath(_ newValue: String) {
         LogWriter.shared.update_logsDirectoryPath(newValue)
     }
-    
     public static func logsDirectoryPath(from path: String) -> String {
         return LogWriter.shared.logsDirectoryPath(from: path)
+    }
+    public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
+        LogWriter.shared.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
