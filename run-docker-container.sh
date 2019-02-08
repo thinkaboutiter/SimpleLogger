@@ -1,0 +1,1 @@
+docker container run -it --rm -v $(pwd):/opt/simple-logger boyankov/swift:swift-4.2-ubuntu-16.04 
