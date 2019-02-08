@@ -50,6 +50,16 @@ private func exerciseSimpleLogger() {
     log_nil()
 }
 
+fileprivate func test_writing_to_file() {
+    
+    Logger.update_shouldLogToFile(true)
+    Logger.setLogFileName("application.log")
+    let directoryPath: String = Logger.logsDirectoryPath(from: #file)
+    Logger.setLogsDirectoryPath(directoryPath)
+}
+
+test_writing_to_file()
+
 exerciseSimpleLogger()
 
 let messge_finish: String = "Finished Simple logger excercise!"
