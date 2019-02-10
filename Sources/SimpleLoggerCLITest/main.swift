@@ -54,11 +54,16 @@ private func exerciseSimpleLogger() {
 
 fileprivate func test_writing_to_file() {
     
-    Logger.update_shouldLogToFile(true)
+    guard let valid_directoryPath: String = Logger.currentDirectoryPath() else {
+        let message: String = "Unable to obtain valid directory path!"
+        Logger.error.message(message)
+        return
+    }
+    let logsDirectoryPath: String = "\(valid_directoryPath)/logs"
+    Logger.setLogsDirectoryPath(logsDirectoryPath)
     Logger.setLogFileName("application.log")
-    let directoryPath: String = Logger.currentDirectoryPath()
-    Logger.setLogsDirectoryPath(directoryPath)
     Logger.setLogFileMaxSizeInBytes(1024*10)
+    Logger.update_shouldLogToFile(true)
 }
 
 test_writing_to_file()
