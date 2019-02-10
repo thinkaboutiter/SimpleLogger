@@ -35,6 +35,8 @@ class LogWriterImpl: LogWriter {
         self.logFileName = newValue
     }
     
+    /// Defaults to `Constants.defaultLogFileSizeInMegabytes`'s value (10 MB).
+    /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
     fileprivate var logFileMaxSizeInBytes: UInt64 = Constants.defaultLogFileSizeInMegabytes * Constants.bytesInMegabyte
     func update_logFileMaxSizeInBytes(_ newValue: UInt64) {
         self.logFileMaxSizeInBytes = newValue
@@ -129,13 +131,21 @@ class LogWriterImpl: LogWriter {
             return
         }
         let fileSize: UInt64 = self.fileSize(at: valid_logFilePath)
-        if fileSize > self.logFileMaxSizeInBytes {
-            do {
-                try fm.removeItem(atPath: valid_logFilePath)
-            }
-            catch {
-                Logger.error.message("error:\(error)")
-            }
+        
+        guard self.logFileMaxSizeInBytes > 0 else {
+            let message: String = "Logfile clean up is disabled."
+            Logger.general.message(message)
+            return
+        }
+        guard fileSize > self.logFileMaxSizeInBytes else {
+            return
+        }
+
+        do {
+            try fm.removeItem(atPath: valid_logFilePath)
+        }
+        catch {
+            Logger.error.message("error:\(error)")
         }
     }
     
@@ -158,7 +168,7 @@ extension LogWriterImpl {
     
     fileprivate struct Constants {
         static let logsDirectoryName: String = "Logs"
-        static let logFileDefaultName: String = "logfile"
+        static let logFileDefaultName: String = "logfile.log"
         static let bytesInMegabyte: UInt64 = 1024 * 1024
         static let defaultLogFileSizeInMegabytes: UInt64 = 10
     }
