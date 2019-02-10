@@ -87,8 +87,11 @@ public enum SimpleLogger: String {
     public static func setLogsDirectoryPath(_ newValue: String) {
         Logger.logWriter.update_logsDirectoryPath(newValue)
     }
-    public static func logsDirectoryPath(from path: String) -> String {
-        return Logger.logWriter.logsDirectoryPath(from: path)
+    
+    /// obtains current directory path when invoked
+    /// precondition: when invoked with default value (#file)
+    public static func currentDirectoryPath(from path: String = #file) -> String {
+        return Logger.logWriter.currentDirectoryPath(from: path)
     }
     public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
         Logger.logWriter.update_logFileMaxSizeInBytes(newValue)

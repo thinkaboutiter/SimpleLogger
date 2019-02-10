@@ -11,7 +11,7 @@ protocol LogWriter: AnyObject {
     func update_logsDirectoryPath(_ newValue: String)
     func update_logFileName(_ newValue: String)
     func update_logFileMaxSizeInBytes(_ newValue: UInt64)
-    func logsDirectoryPath(from path: String) -> String
+    func currentDirectoryPath(from path: String) -> String
     func writeToFile(_ candidate: String)
 }
 
@@ -47,7 +47,7 @@ class LogWriterImpl: LogWriter {
     fileprivate init() {}
     
     // MARK: - Utils
-    func logsDirectoryPath(from path: String) -> String {
+    func currentDirectoryPath(from path: String) -> String {
         let filePathComponents: [String] = URL(fileURLWithPath: path).pathComponents
         let folderPath = "/\(filePathComponents[1..<filePathComponents.count-1].joined(separator: "/"))"
         let logsPath = "\(folderPath)/\(Constants.logsDirectoryName)"
