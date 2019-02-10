@@ -133,8 +133,6 @@ class LogWriterImpl: LogWriter {
         let fileSize: UInt64 = self.fileSize(at: valid_logFilePath)
         
         guard self.logFileMaxSizeInBytes > 0 else {
-            let message: String = "Logfile clean up is disabled."
-            Logger.general.message(message)
             return
         }
         guard fileSize > self.logFileMaxSizeInBytes else {
