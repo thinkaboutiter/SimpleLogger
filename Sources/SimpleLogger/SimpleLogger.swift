@@ -45,19 +45,22 @@ public enum SimpleLogger: String {
     case cache = "📀"
     
     // MARK: Properies
+    /// Logging verbosity (using verbosity toggles).
     fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
     public static func use_verbosity(_ newValue: UInt32) {
         Logger.verbosityLevel = newValue
     }
     
+    /// Prefixes delimiter string.
     fileprivate(set) public static var delimiter: String = "»"
     public static func use_delimiter(_ newValue: String) {
         Logger.delimiter = newValue
     }
     
-    fileprivate(set) public static var shouldUseSourceLocationPrefix: Bool = true
-    public static func enable_shouldUseSourceLocationPrefix(_ newValue: Bool) {
-        Logger.shouldUseSourceLocationPrefix = newValue
+    /// Opt to log path as prefix to the log message.
+    fileprivate(set) public static var shouldLogPathPrefix: Bool = true
+    public static func enable_shouldLogPathPrefix(_ newValue: Bool) {
+        Logger.shouldLogPathPrefix = newValue
     }
     
     fileprivate var emojiTimePrefix: String {
@@ -81,15 +84,25 @@ public enum SimpleLogger: String {
         return LogWriterImpl.shared
     }
     
+    /// Sets log file name (filename + extension) when logging to file is enabled.
+    /// default is `logfile.log`
     public static func setLogFileName(_ newValue: String) {
         Logger.logWriter.update_logFileName(newValue)
     }
+    
+    /// Sets log file(s) directory path when logging
     public static func setLogsDirectoryPath(_ newValue: String) {
         Logger.logWriter.update_logsDirectoryPath(newValue)
     }
-    public static func logsDirectoryPath(from path: String) -> String {
-        return Logger.logWriter.logsDirectoryPath(from: path)
+    
+    /// obtains current directory path when invoked
+    /// precondition: when invoked with default value (#file)
+    public static func currentDirectoryPath(from path: String = #file) -> String {
+        return Logger.logWriter.currentDirectoryPath(from: path)
     }
+    
+    /// Maximum log file size in bytes.
+    /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
     public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
         Logger.logWriter.update_logFileMaxSizeInBytes(newValue)
     }
@@ -158,7 +171,7 @@ public enum SimpleLogger: String {
         }
         let sourceLocationPrefix: String?
         
-        if Logger.shouldUseSourceLocationPrefix {
+        if Logger.shouldLogPathPrefix {
             let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
             sourceLocationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
         }
