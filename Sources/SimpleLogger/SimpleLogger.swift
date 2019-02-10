@@ -97,7 +97,7 @@ public enum SimpleLogger: String {
     
     /// obtains current directory path when invoked
     /// precondition: when invoked with default value (#file)
-    public static func currentDirectoryPath(from path: String = #file) -> String {
+    public static func currentDirectoryPath(from path: String = #file) -> String? {
         return Logger.logWriter.currentDirectoryPath(from: path)
     }
     

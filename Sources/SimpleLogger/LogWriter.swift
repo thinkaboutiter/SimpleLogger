@@ -11,7 +11,7 @@ protocol LogWriter: AnyObject {
     func update_logsDirectoryPath(_ newValue: String)
     func update_logFileName(_ newValue: String)
     func update_logFileMaxSizeInBytes(_ newValue: UInt64)
-    func currentDirectoryPath(from path: String) -> String
+    func currentDirectoryPath(from candidate: String) -> String?
     func writeToFile(_ candidate: String)
 }
 
@@ -49,11 +49,20 @@ class LogWriterImpl: LogWriter {
     fileprivate init() {}
     
     // MARK: - Utils
-    func currentDirectoryPath(from path: String) -> String {
-        let filePathComponents: [String] = URL(fileURLWithPath: path).pathComponents
-        let folderPath = "/\(filePathComponents[1..<filePathComponents.count-1].joined(separator: "/"))"
-        let logsPath = "\(folderPath)/\(Constants.logsDirectoryName)"
-        return logsPath
+    func currentDirectoryPath(from candidate: String) -> String? {
+        guard let valid_url = URL(string: candidate) else {
+            return nil
+        }
+        let pathComponents: [String] = valid_url.pathComponents
+        let folderPath: String
+        let fm = FileManager.default
+        if fm.fileExists(atPath: valid_url.absoluteString) {
+            folderPath = "/\(pathComponents[1..<pathComponents.count-1].joined(separator: "/"))"
+        }
+        else {
+            folderPath = "/\(pathComponents[1..<pathComponents.count].joined(separator: "/"))"
+        }
+        return folderPath
     }
     
     func writeToFile(_ candidate: String) {
@@ -75,6 +84,9 @@ class LogWriterImpl: LogWriter {
             catch {
                 Logger.error.message("error:\(error)")
             }
+        }
+        guard fm.isWritableFile(atPath: valid_logFilePath) else {
+            return
         }
         guard let valid_fileHandle = FileHandle(forWritingAtPath: valid_logFilePath) else {
             let message: String = "Unable to obtain valid \(String(describing: FileHandle.self)) object!"
@@ -165,7 +177,6 @@ class LogWriterImpl: LogWriter {
 extension LogWriterImpl {
     
     fileprivate struct Constants {
-        static let logsDirectoryName: String = "Logs"
         static let logFileDefaultName: String = "logfile.log"
         static let bytesInMegabyte: UInt64 = 1024 * 1024
         static let defaultLogFileSizeInMegabytes: UInt64 = 10
