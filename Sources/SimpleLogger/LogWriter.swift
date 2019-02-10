@@ -55,7 +55,8 @@ class LogWriterImpl: LogWriter {
         }
         let pathComponents: [String] = valid_url.pathComponents
         let folderPath: String
-        if valid_url.isFileURL {
+        let fm = FileManager.default
+        if fm.fileExists(atPath: valid_url.absoluteString) {
             folderPath = "/\(pathComponents[1..<pathComponents.count-1].joined(separator: "/"))"
         }
         else {
