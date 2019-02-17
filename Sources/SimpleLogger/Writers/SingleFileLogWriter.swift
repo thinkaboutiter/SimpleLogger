@@ -69,7 +69,11 @@ struct SingleFileLogWriter {
         guard SingleFileLogWriter.logsDirectoryPath.count > 0 else {
             return nil
         }
-        return "\(SingleFileLogWriter.logsDirectoryPath)/\(SingleFileLogWriter.logFileName)"
+        let pathCandidate: String = "\(SingleFileLogWriter.logsDirectoryPath)/\(SingleFileLogWriter.logFileName)"
+        guard let valid_url: URL = URL(string: pathCandidate) else {
+            return nil
+        }
+        return valid_url.absoluteString
     }
     
     fileprivate static func cleanUpIfNeeded() {
