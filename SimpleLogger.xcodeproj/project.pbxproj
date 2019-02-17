@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA56292220E13A8008E0A65 /* LogWriter.swift */; };
 		4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */; };
 		4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BB12219A11B008EA369 /* WriterUtils.swift */; };
 		OBJ_24 /* SimpleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SimpleLogger.swift */; };
@@ -27,7 +26,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4FA56292220E13A8008E0A65 /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
 		4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFileLogWriter.swift; sourceTree = "<group>"; };
 		4FF88BB12219A11B008EA369 /* WriterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterUtils.swift; sourceTree = "<group>"; };
 		OBJ_11 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -62,7 +60,6 @@
 		4FF88BB022198E8B008EA369 /* Writers */ = {
 			isa = PBXGroup;
 			children = (
-				4FA56292220E13A8008E0A65 /* LogWriter.swift */,
 				4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */,
 				4FF88BB12219A11B008EA369 /* WriterUtils.swift */,
 			);
@@ -219,7 +216,6 @@
 				OBJ_24 /* SimpleLogger.swift in Sources */,
 				4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */,
 				4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */,
-				4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

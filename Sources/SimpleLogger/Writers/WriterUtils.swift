@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Helper type for file IO.
 struct WriterUtils {
     
     static func directoryPath(from candidate: String) -> String? {
