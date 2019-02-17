@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA56292220E13A8008E0A65 /* LogWriter.swift */; };
+		4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */; };
+		4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BB12219A11B008EA369 /* WriterUtils.swift */; };
+		4FF88BB42219A918008EA369 /* MultipleFilesLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BB32219A918008EA369 /* MultipleFilesLogWriter.swift */; };
 		OBJ_24 /* SimpleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SimpleLogger.swift */; };
 		OBJ_31 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* main.swift */; };
 		OBJ_33 /* SimpleLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SimpleLogger::SimpleLogger::Product" /* SimpleLogger.framework */; };
@@ -25,7 +27,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4FA56292220E13A8008E0A65 /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
+		4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFileLogWriter.swift; sourceTree = "<group>"; };
+		4FF88BB12219A11B008EA369 /* WriterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterUtils.swift; sourceTree = "<group>"; };
+		4FF88BB32219A918008EA369 /* MultipleFilesLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleFilesLogWriter.swift; sourceTree = "<group>"; };
 		OBJ_11 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_13 /* Playground */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Playground; sourceTree = SOURCE_ROOT; };
 		OBJ_14 /* Samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Samples; sourceTree = SOURCE_ROOT; };
@@ -55,6 +59,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FF88BB022198E8B008EA369 /* Writers */ = {
+			isa = PBXGroup;
+			children = (
+				4FF88BB32219A918008EA369 /* MultipleFilesLogWriter.swift */,
+				4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */,
+				4FF88BB12219A11B008EA369 /* WriterUtils.swift */,
+			);
+			path = Writers;
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* SimpleLoggerCLITest */ = {
 			isa = PBXGroup;
 			children = (
@@ -80,7 +94,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -91,7 +105,6 @@
 				OBJ_15 /* SimpleLogger */,
 				OBJ_16 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -107,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* SimpleLogger.swift */,
-				4FA56292220E13A8008E0A65 /* LogWriter.swift */,
+				4FF88BB022198E8B008EA369 /* Writers */,
 			);
 			name = SimpleLogger;
 			path = Sources/SimpleLogger;
@@ -186,7 +199,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_16 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -204,7 +217,9 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_24 /* SimpleLogger.swift in Sources */,
-				4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */,
+				4FF88BB42219A918008EA369 /* MultipleFilesLogWriter.swift in Sources */,
+				4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */,
+				4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,7 +29,6 @@ private func log_object() {
         3
     ]
     Logger.debug.message("Array:").object(sampleArray)
-    Logger.debug.message("\(sampleArray)")
     
     // dictionary
     let sampleDictionary: [String: String] = [
@@ -39,7 +38,6 @@ private func log_object() {
         "key_3": "value_3"
     ]
     Logger.debug.message("Dictionary:").object(sampleDictionary)
-    Logger.debug.message("\(sampleDictionary)")
 }
 
 private func log_nil() {
@@ -62,8 +60,8 @@ fileprivate func test_writing_to_file() {
     let logsDirectoryPath: String = "\(valid_directoryPath)/logs"
     Logger.setLogsDirectoryPath(logsDirectoryPath)
     Logger.setLogFileName("application.log")
-    Logger.setLogFileMaxSizeInBytes(1024*10)
-    Logger.update_shouldLogToFile(true)
+    Logger.setSingleLogFileMaxSizeInBytes(1024*1024*1)
+    Logger.update_fileLogging(.multipleFiles)
 }
 
 test_writing_to_file()
