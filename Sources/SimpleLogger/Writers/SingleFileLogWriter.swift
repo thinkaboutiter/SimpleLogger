@@ -38,11 +38,7 @@ struct SingleFileLogWriter {
     // MARK: - Initialization
     fileprivate init() {}
     
-    // MARK: - Utils
-    static func currentDirectoryPath(from candidate: String) -> String? {
-        return WriterUtils.directoryPath(from: candidate)
-    }
-    
+    // MARK: - Utils    
     static func writeToFile(_ candidate: String) {
         guard SingleFileLogWriter.didCreateLogsDirectory else {
             let message: String = "Logs directory not available"

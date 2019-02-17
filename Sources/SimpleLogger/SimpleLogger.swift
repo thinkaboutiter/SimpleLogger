@@ -81,7 +81,7 @@ public enum SimpleLogger: String {
         Logger.fileLogging = newValue
     }
     
-    /// Sets log file name (filename + extension) when logging to file is enabled.
+    /// Sets log file name (filename + extension) when logging to single file is enabled.
     /// default is `logfile.log`
     public static func setLogFileName(_ newValue: String) {
         SingleFileLogWriter.update_logFileName(newValue)
@@ -90,14 +90,15 @@ public enum SimpleLogger: String {
     /// Sets log file(s) directory path when logging
     public static func setLogsDirectoryPath(_ newValue: String) {
         SingleFileLogWriter.update_logsDirectoryPath(newValue)
+        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
     }
     
     /// obtains current directory path when invoked
     /// precondition: when invoked with default value (#file)
     public static func currentDirectoryPath(from path: String = #file) -> String? {
-        return SingleFileLogWriter.currentDirectoryPath(from: path)
+        return WriterUtils.directoryPath(from: path)
     }
-        
+    
     /// Maximum log file size in bytes.
     /// When using single log file logging.
     /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
