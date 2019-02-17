@@ -34,8 +34,8 @@ struct MultipleFilesLogWriter {
             print(message)
             return
         }
-        let candidate: String = "\(MultipleFilesLogWriter.logsDirectoryPath)/\(fileName)\(Constants.logFileExtension)"
-        guard let valid_absolutePath: String = WriterUtils.absoulutePathString(from: candidate) else {
+        let path_candidate: String = "\(MultipleFilesLogWriter.logsDirectoryPath)/\(fileName)\(Constants.logFileExtension)"
+        guard let valid_absolutePath: String = WriterUtils.absoulutePathString(from: path_candidate) else {
             let message: String = "Invalid log file path!"
             print(message)
             return
