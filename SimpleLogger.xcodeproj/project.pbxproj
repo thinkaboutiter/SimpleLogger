@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA56292220E13A8008E0A65 /* LogWriter.swift */; };
 		4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */; };
+		4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF88BB12219A11B008EA369 /* WriterUtils.swift */; };
 		OBJ_24 /* SimpleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SimpleLogger.swift */; };
 		OBJ_31 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* main.swift */; };
 		OBJ_33 /* SimpleLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SimpleLogger::SimpleLogger::Product" /* SimpleLogger.framework */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		4FA56292220E13A8008E0A65 /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
 		4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFileLogWriter.swift; sourceTree = "<group>"; };
+		4FF88BB12219A11B008EA369 /* WriterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterUtils.swift; sourceTree = "<group>"; };
 		OBJ_11 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_13 /* Playground */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Playground; sourceTree = SOURCE_ROOT; };
 		OBJ_14 /* Samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Samples; sourceTree = SOURCE_ROOT; };
@@ -62,6 +64,7 @@
 			children = (
 				4FA56292220E13A8008E0A65 /* LogWriter.swift */,
 				4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */,
+				4FF88BB12219A11B008EA369 /* WriterUtils.swift */,
 			);
 			path = Writers;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			files = (
 				OBJ_24 /* SimpleLogger.swift in Sources */,
 				4FF88BAF22198BA4008EA369 /* SingleFileLogWriter.swift in Sources */,
+				4FF88BB22219A11B008EA369 /* WriterUtils.swift in Sources */,
 				4FA56293220E13A8008E0A65 /* LogWriter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
