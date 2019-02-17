@@ -221,17 +221,18 @@ public enum SimpleLogger: String {
     
     @discardableResult
     fileprivate func log(_ any: Any?) -> Logger {
+        if Logger.shouldLogToFile {
+            self.logToFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+        }
+        
         #if os(Linux)
-        debugPrint(any ?? "<null>", terminator: "\n\n")
-        return self
-        
+            debugPrint(any ?? "<null>", terminator: "\n\n")
+            return self
         #else
-        
-        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
-        debugPrint(pointer, terminator: "\n")
-        debugPrint(any as AnyObject, terminator: "\n\n")
-        return self
-        
+            let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
+            debugPrint(pointer, terminator: "\n")
+            debugPrint(any as AnyObject, terminator: "\n\n")
+            return self
         #endif
     }
 }
