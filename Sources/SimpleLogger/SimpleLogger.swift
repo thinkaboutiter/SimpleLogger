@@ -58,6 +58,7 @@ public enum SimpleLogger: String {
     }
     
     /// Opt to log path as prefix to the log message.
+    /// Disabling this may mess the sinlge log file if it is used!.
     fileprivate(set) public static var shouldLogPathPrefix: Bool = true
     public static func enable_shouldLogPathPrefix(_ newValue: Bool) {
         Logger.shouldLogPathPrefix = newValue
@@ -75,36 +76,34 @@ public enum SimpleLogger: String {
         return prefix
     }
     
-    fileprivate(set) static var shouldLogToFile: Bool = false
-    public static func update_shouldLogToFile(_ newValue: Bool) {
-        Logger.shouldLogToFile = newValue
+    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
+    public static func update_fileLogging(_ newValue: SimpleLogger.FileLogging) {
+        Logger.fileLogging = newValue
     }
     
-    fileprivate static var logWriter: LogWriter {
-        return LogWriterImpl.shared
-    }
-    
-    /// Sets log file name (filename + extension) when logging to file is enabled.
+    /// Sets log file name (filename + extension) when logging to single file is enabled.
     /// default is `logfile.log`
-    public static func setLogFileName(_ newValue: String) {
-        Logger.logWriter.update_logFileName(newValue)
+    public static func setSingleLogFileName(_ newValue: String) {
+        SingleFileLogWriter.update_logFileName(newValue)
     }
     
     /// Sets log file(s) directory path when logging
     public static func setLogsDirectoryPath(_ newValue: String) {
-        Logger.logWriter.update_logsDirectoryPath(newValue)
+        SingleFileLogWriter.update_logsDirectoryPath(newValue)
+        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
     }
     
     /// obtains current directory path when invoked
     /// precondition: when invoked with default value (#file)
     public static func currentDirectoryPath(from path: String = #file) -> String? {
-        return Logger.logWriter.currentDirectoryPath(from: path)
+        return WriterUtils.directoryPath(from: path)
     }
     
     /// Maximum log file size in bytes.
-    /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
-    public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
-        Logger.logWriter.update_logFileMaxSizeInBytes(newValue)
+    /// When using single log file logging.
+    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
+    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
+        SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
@@ -148,13 +147,24 @@ public enum SimpleLogger: String {
     
     fileprivate static let logFile_dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MMM-dd HH:mm:ss.SSS"
+        formatter.dateFormat = "YYYY-MM-dd HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
     fileprivate static func logFile_timestamp() -> String {
         return Logger.logFile_dateFormatter.string(from: Date())
+    }
+    
+    fileprivate static let logFileName_dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    fileprivate static func logFileName_timestamp() -> String {
+        return Logger.logFileName_dateFormatter.string(from: Date())
     }
     
     // MARK: - Logging
@@ -165,77 +175,180 @@ public enum SimpleLogger: String {
     /// - parameter line: the number of the line at which this function is invoked.
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
-    public func message(_ message: String? = nil, filePath: String = #file, function: String = #function, line: Int = #line) -> Logger {
+    public func message(_ message: String? = nil,
+                        filePath: String = #file,
+                        function: String = #function,
+                        line: Int = #line) -> Logger
+    {
         guard self.shouldLog else {
             return self
         }
-        let sourceLocationPrefix: String?
         
-        if Logger.shouldLogPathPrefix {
-            let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
-            sourceLocationPrefix = "\(Logger.delimiter) \(fileName) \(Logger.delimiter) \(function) \(Logger.delimiter) \(line)"
-        }
-        else {
-            sourceLocationPrefix = nil
-        }
-        
-        return self.log(message, sourceLocationPrefix: sourceLocationPrefix)
+        return self.log(message: message,
+                        filePath: filePath,
+                        function: function,
+                        line: line)
     }
     
     /// Logging an object.
     /// - parameter object: the object/value to be logged.
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
-    public func object(_ object: Any?) -> Logger {
+    public func object(_ object: Any?,
+                       filePath: String = #file,
+                       function: String = #function,
+                       line: Int = #line) -> Logger
+    {
         guard self.shouldLog else {
             return self
         }
-        return self.log(object)
+        return self.log(any: object,
+                        filePath: filePath,
+                        function: function,
+                        line: line)
     }
     
     // MARK: - Logging Utils
+    /// Logging message.
     @discardableResult
-    fileprivate func log(_ message: String?, sourceLocationPrefix: String?) -> Logger {
-        let debugMessage: String
-        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
-            debugMessage = "\(self.emojiTimePrefix) \(valid_sourceLocationPrefix) \(Logger.delimiter) \(message ?? "")"
+    fileprivate func log(message: String?,
+                         filePath: String,
+                         function: String,
+                         line: Int) -> Logger
+    {
+        let sourceLocationPrefix: String?
+        if Logger.shouldLogPathPrefix {
+            sourceLocationPrefix = self._sourceLocationPrefix(filePath: filePath,
+                                                              function: function,
+                                                              line: line,
+                                                              delimiter: Logger.delimiter)
         }
         else {
-            debugMessage = "\(self.emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
+            sourceLocationPrefix = nil
         }
+        let debugMessage: String = self._debugMessage(from: message,
+                                                      sourceLocationPrefix: sourceLocationPrefix,
+                                                      emojiTimePrefix: self.emojiTimePrefix,
+                                                      delimiter: Logger.delimiter)
+        // console logging
         debugPrint(debugMessage, terminator: "\n")
         
-        if Logger.shouldLogToFile {
-            self.logToFile(message, sourceLocationPrefix: sourceLocationPrefix)
+        // file logging
+        switch Logger.fileLogging {
+        case .none:
+            break
+        case .singleFile:
+            self.writeToSingleLogFile(message,
+                                      sourceLocationPrefix: sourceLocationPrefix)
+        case .multipleFiles:
+            self.write(message,
+                       filePath: filePath,
+                       sourceLocationPrefix: sourceLocationPrefix)
         }
         return self
     }
     
-    fileprivate func logToFile(_ message: String?, sourceLocationPrefix: String?) {
-        let logFile_message: String
+    private func _sourceLocationPrefix(filePath: String,
+                                       function: String,
+                                       line: Int,
+                                       delimiter: String) -> String
+    {
+        let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
+        let result = "\(delimiter) \(fileName) \(delimiter) \(function) \(delimiter) \(line)"
+        return result
+    }
+    
+    private func _debugMessage(from message: String?,
+                               sourceLocationPrefix: String?,
+                               emojiTimePrefix: String,
+                               delimiter: String) -> String
+    {
+        let result: String
         if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
-            logFile_message = "\(self.logFile_emojiTimePrefix) \(valid_sourceLocationPrefix) \(Logger.delimiter) \(message ?? "")"
+            result = "\(emojiTimePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
         }
         else {
-            logFile_message = "\(self.logFile_emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
+            result = "\(emojiTimePrefix) \(delimiter) \(message ?? "")"
         }
-        Logger.logWriter.writeToFile(logFile_message)
+        return result
     }
     
+    fileprivate func writeToSingleLogFile(_ message: String?,
+                                          sourceLocationPrefix: String?)
+    {
+        let logFile_message: String = self._logFileMessage(from: message,
+                                                           sourceLocationPrefix: sourceLocationPrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           delimiter: Logger.delimiter)
+        SingleFileLogWriter.writeToFile(logFile_message)
+    }
+    
+    private func _logFileMessage(from message: String?,
+                                 sourceLocationPrefix: String?,
+                                 logFile_emojiTimePrefix: String,
+                                 delimiter: String) -> String
+    {
+        let result: String
+        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
+            result = "\(logFile_emojiTimePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
+        }
+        else {
+            result = "\(logFile_emojiTimePrefix) \(delimiter) \(message ?? "")"
+        }
+        return result
+    }
+    
+    fileprivate func write(_ message: String?,
+                           filePath: String,
+                           sourceLocationPrefix: String?)
+    {
+        let logFile_message: String = self._logFileMessage(from: message,
+                                                           sourceLocationPrefix: sourceLocationPrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           delimiter: Logger.delimiter)
+        let source_fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
+        let logFileName: String = "\(Logger.logFileName_timestamp())-\(source_fileName)"
+        MultipleFilesLogWriter.write(logFile_message, toFile: logFileName)
+
+    }
+    
+    /// Logging object.
     @discardableResult
-    fileprivate func log(_ any: Any?) -> Logger {
+    fileprivate func log(any: Any?,
+                         filePath: String,
+                         function: String,
+                         line: Int) -> Logger
+    {
+        // file logging
+        switch Logger.fileLogging {
+        case .none:
+            break
+        case .singleFile:
+            self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+        case .multipleFiles:
+            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
+        }
+        
+        // console logging
         #if os(Linux)
-        debugPrint(any ?? "<null>", terminator: "\n\n")
-        return self
-        
+            debugPrint(any ?? "<null>", terminator: "\n\n")
+            return self
         #else
-        
-        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
-        debugPrint(pointer, terminator: "\n")
-        debugPrint(any as AnyObject, terminator: "\n\n")
-        return self
-        
+            let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
+            debugPrint(pointer, terminator: "\n")
+            debugPrint(any as AnyObject, terminator: "\n\n")
+            return self
         #endif
+    }
+}
+
+// MARK: - Logging to file
+extension SimpleLogger {
+    
+    public enum FileLogging: UInt8 {
+        case none           = 0
+        case singleFile     = 1
+        case multipleFiles  = 2
     }
 }
 
