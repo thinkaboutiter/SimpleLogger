@@ -15,9 +15,7 @@ protocol SingleFileLogWriter: LogWriter {
 
 struct SingleFileLogWriterImpl: SingleFileLogWriter {
     
-    // MARK: - Properties
-//    static let shared: LogWriterImpl = LogWriterImpl()
-    
+    // MARK: - Properties    
     fileprivate static var logsDirectoryPath: String = ""
     static func update_logsDirectoryPath(_ newValue: String) {
         SingleFileLogWriterImpl.logsDirectoryPath = newValue

@@ -61,7 +61,7 @@ fileprivate func test_writing_to_file() {
     Logger.setLogsDirectoryPath(logsDirectoryPath)
     Logger.setLogFileName("application.log")
     Logger.setLogFileMaxSizeInBytes(1024*1024*1)
-    Logger.update_shouldLogToFile(true)
+    Logger.update_fileLogging(.singleFile)
 }
 
 test_writing_to_file()
