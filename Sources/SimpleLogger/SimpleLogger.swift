@@ -99,8 +99,9 @@ public enum SimpleLogger: String {
     }
     
     /// Maximum log file size in bytes.
-    /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
-    public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
+    /// When using single log file logging.
+    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
+    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
         SingleFileLogWriterImpl.update_logFileMaxSizeInBytes(newValue)
     }
     

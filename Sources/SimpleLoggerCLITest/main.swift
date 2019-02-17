@@ -60,7 +60,7 @@ fileprivate func test_writing_to_file() {
     let logsDirectoryPath: String = "\(valid_directoryPath)/logs"
     Logger.setLogsDirectoryPath(logsDirectoryPath)
     Logger.setLogFileName("application.log")
-    Logger.setLogFileMaxSizeInBytes(1024*1024*1)
+    Logger.setSingleLogFileMaxSizeInBytes(1024*1024*1)
     Logger.update_fileLogging(.singleFile)
 }
 
