@@ -43,6 +43,13 @@ struct WriterUtils {
         }
     }
     
+    static func absoulutePathString(from candidate: String) -> String? {
+        guard let valid_url: URL = URL(string: candidate) else {
+            return nil
+        }
+        return valid_url.absoluteString
+    }
+    
     static func write(_ candidate: String,
                       toFileAtPath path: String)
     {
@@ -53,6 +60,7 @@ struct WriterUtils {
             }
             catch {
                 print("error:\(error)")
+                return
             }
         }
         guard fm.isWritableFile(atPath: path) else {
