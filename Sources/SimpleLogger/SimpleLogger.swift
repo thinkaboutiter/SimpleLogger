@@ -83,7 +83,7 @@ public enum SimpleLogger: String {
     
     /// Sets log file name (filename + extension) when logging to single file is enabled.
     /// default is `logfile.log`
-    public static func setLogFileName(_ newValue: String) {
+    public static func setSingleLogFileName(_ newValue: String) {
         SingleFileLogWriter.update_logFileName(newValue)
     }
     
