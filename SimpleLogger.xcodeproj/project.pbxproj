@@ -57,6 +57,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FF88BB022198E8B008EA369 /* Writers */ = {
+			isa = PBXGroup;
+			children = (
+				4FA56292220E13A8008E0A65 /* LogWriter.swift */,
+				4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */,
+			);
+			path = Writers;
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* SimpleLoggerCLITest */ = {
 			isa = PBXGroup;
 			children = (
@@ -108,8 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* SimpleLogger.swift */,
-				4FA56292220E13A8008E0A65 /* LogWriter.swift */,
-				4FF88BAE22198BA4008EA369 /* SingleFileLogWriter.swift */,
+				4FF88BB022198E8B008EA369 /* Writers */,
 			);
 			name = SimpleLogger;
 			path = Sources/SimpleLogger;
