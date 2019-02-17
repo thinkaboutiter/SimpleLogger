@@ -80,31 +80,27 @@ public enum SimpleLogger: String {
         Logger.shouldLogToFile = newValue
     }
     
-    fileprivate static var logWriter: LogWriter {
-        return LogWriterImpl.shared
-    }
-    
     /// Sets log file name (filename + extension) when logging to file is enabled.
     /// default is `logfile.log`
     public static func setLogFileName(_ newValue: String) {
-        Logger.logWriter.update_logFileName(newValue)
+        SingleFileLogWriterImpl.update_logFileName(newValue)
     }
     
     /// Sets log file(s) directory path when logging
     public static func setLogsDirectoryPath(_ newValue: String) {
-        Logger.logWriter.update_logsDirectoryPath(newValue)
+        SingleFileLogWriterImpl.update_logsDirectoryPath(newValue)
     }
     
     /// obtains current directory path when invoked
     /// precondition: when invoked with default value (#file)
     public static func currentDirectoryPath(from path: String = #file) -> String? {
-        return Logger.logWriter.currentDirectoryPath(from: path)
+        return SingleFileLogWriterImpl.currentDirectoryPath(from: path)
     }
     
     /// Maximum log file size in bytes.
     /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
     public static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
-        Logger.logWriter.update_logFileMaxSizeInBytes(newValue)
+        SingleFileLogWriterImpl.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
@@ -219,7 +215,7 @@ public enum SimpleLogger: String {
         else {
             logFile_message = "\(self.logFile_emojiTimePrefix) \(Logger.delimiter) \(message ?? "")"
         }
-        Logger.logWriter.writeToFile(logFile_message)
+        SingleFileLogWriterImpl.writeToFile(logFile_message)
     }
     
     @discardableResult
