@@ -147,13 +147,24 @@ public enum SimpleLogger: String {
     
     fileprivate static let logFile_dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MMM-dd HH:mm:ss.SSS"
+        formatter.dateFormat = "YYYY-MM-dd HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
     fileprivate static func logFile_timestamp() -> String {
         return Logger.logFile_dateFormatter.string(from: Date())
+    }
+    
+    fileprivate static let logFileName_dateFormatter: DateFormatter = {
+        var formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    fileprivate static func logFileName_timestamp() -> String {
+        return Logger.logFileName_dateFormatter.string(from: Date())
     }
     
     // MARK: - Logging
@@ -183,11 +194,18 @@ public enum SimpleLogger: String {
     /// - parameter object: the object/value to be logged.
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
-    public func object(_ object: Any?) -> Logger {
+    public func object(_ object: Any?,
+                       filePath: String = #file,
+                       function: String = #function,
+                       line: Int = #line) -> Logger
+    {
         guard self.shouldLog else {
             return self
         }
-        return self.log(object)
+        return self.log(any: object,
+                        filePath: filePath,
+                        function: function,
+                        line: line)
     }
     
     // MARK: - Logging Utils
@@ -220,7 +238,12 @@ public enum SimpleLogger: String {
         case .none:
             break
         case .singleFile:
-            self.writeToSingleLogFile(message, sourceLocationPrefix: sourceLocationPrefix)
+            self.writeToSingleLogFile(message,
+                                      sourceLocationPrefix: sourceLocationPrefix)
+        case .multipleFiles:
+            self.write(message,
+                       filePath: filePath,
+                       sourceLocationPrefix: sourceLocationPrefix)
         }
         return self
     }
@@ -253,17 +276,17 @@ public enum SimpleLogger: String {
     fileprivate func writeToSingleLogFile(_ message: String?,
                                           sourceLocationPrefix: String?)
     {
-        let logFile_message: String = self._singleLogFileMessage(from: message,
-                                                                 sourceLocationPrefix: sourceLocationPrefix,
-                                                                 logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
-                                                                 delimiter: Logger.delimiter)
+        let logFile_message: String = self._logFileMessage(from: message,
+                                                           sourceLocationPrefix: sourceLocationPrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           delimiter: Logger.delimiter)
         SingleFileLogWriter.writeToFile(logFile_message)
     }
     
-    private func _singleLogFileMessage(from message: String?,
-                                       sourceLocationPrefix: String?,
-                                       logFile_emojiTimePrefix: String,
-                                       delimiter: String) -> String
+    private func _logFileMessage(from message: String?,
+                                 sourceLocationPrefix: String?,
+                                 logFile_emojiTimePrefix: String,
+                                 delimiter: String) -> String
     {
         let result: String
         if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
@@ -275,12 +298,26 @@ public enum SimpleLogger: String {
         return result
     }
     
+    fileprivate func write(_ message: String?,
+                           filePath: String,
+                           sourceLocationPrefix: String?)
+    {
+        let logFile_message: String = self._logFileMessage(from: message,
+                                                           sourceLocationPrefix: sourceLocationPrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           delimiter: Logger.delimiter)
+        let source_fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
+        let logFileName: String = "\(Logger.logFileName_timestamp())-\(source_fileName)"
+        MultipleFilesLogWriter.write(logFile_message, toFile: logFileName)
+
+    }
+    
     /// Logging object.
     @discardableResult
-    fileprivate func log(_ any: Any?,
-                         filePath: String = #file,
-                         function: String = #function,
-                         line: Int = #line) -> Logger
+    fileprivate func log(any: Any?,
+                         filePath: String,
+                         function: String,
+                         line: Int) -> Logger
     {
         // file logging
         switch Logger.fileLogging {
@@ -288,6 +325,8 @@ public enum SimpleLogger: String {
             break
         case .singleFile:
             self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+        case .multipleFiles:
+            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
         }
         
         // console logging
@@ -309,6 +348,7 @@ extension SimpleLogger {
     public enum FileLogging: UInt8 {
         case none           = 0
         case singleFile     = 1
+        case multipleFiles  = 2
     }
 }
 
