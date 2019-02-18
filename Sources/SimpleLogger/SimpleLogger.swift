@@ -44,6 +44,29 @@ public enum SimpleLogger: String {
     case network = "🌎"
     case cache = "📀"
     
+    fileprivate var asciiValue: String {
+        let result: String
+        switch self {
+        case .general:
+            result = "GENERAL"
+        case .debug:
+            result = "DEBUG"
+        case .success:
+            result = "SUCCESS"
+        case .warning:
+            result = "WARNING"
+        case .error:
+            result = "ERROR"
+        case .fatal:
+            result = "FATAL"
+        case .network:
+            result = "NETWORK"
+        case .cache:
+            result = "CACHE"
+        }
+        return result
+    }
+    
     // MARK: Properies
     /// Logging verbosity (using verbosity toggles).
     fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
@@ -57,6 +80,12 @@ public enum SimpleLogger: String {
         Logger.delimiter = newValue
     }
     
+    /// Prefix customization.
+    fileprivate(set) public static var prefix: SimpleLogger.Prefix = .emoji
+    public static func use_prefix(_ newValue: SimpleLogger.Prefix) {
+        Logger.prefix = newValue
+    }
+    
     /// Opt to log path as prefix to the log message.
     /// Disabling this may mess the sinlge log file if it is used!.
     fileprivate(set) public static var shouldLogPathPrefix: Bool = true
@@ -64,15 +93,49 @@ public enum SimpleLogger: String {
         Logger.shouldLogPathPrefix = newValue
     }
     
-    fileprivate var emojiTimePrefix: String {
+    fileprivate var timePrefix: String {
+        let result: String
+        switch Logger.prefix {
+        case .ascii:
+            result = self._emojiTimePrefix
+        case .emoji:
+            result = self._asciiTimePrefix
+        }
+        return result
+    }
+    
+    private var _emojiTimePrefix: String {
         let timeStampString: String = Logger.timestamp()
         let prefix: String = "\(self.rawValue) [\(timeStampString)]"
         return prefix
     }
     
-    fileprivate var logFile_emojiTimePrefix: String {
+    private var _asciiTimePrefix: String {
+        let timeStampString: String = Logger.timestamp()
+        let prefix: String = "\(self.asciiValue) [\(timeStampString)]"
+        return prefix
+    }
+    
+    fileprivate var logFile_timePrefix: String {
+        let result: String
+        switch Logger.prefix {
+        case .ascii:
+            result = self._logFile_asciiTimePrefix
+        case .emoji:
+            result = self._logFile_emojiTimePrefix
+        }
+        return result
+    }
+    
+    private var _logFile_emojiTimePrefix: String {
         let timeStampString: String = Logger.logFile_timestamp()
         let prefix: String = "\(self.rawValue) [\(timeStampString)]"
+        return prefix
+    }
+    
+    private var _logFile_asciiTimePrefix: String {
+        let timeStampString: String = Logger.logFile_timestamp()
+        let prefix: String = "\(self.asciiValue) [\(timeStampString)]"
         return prefix
     }
     
@@ -228,7 +291,7 @@ public enum SimpleLogger: String {
         }
         let debugMessage: String = self._debugMessage(from: message,
                                                       sourceLocationPrefix: sourceLocationPrefix,
-                                                      emojiTimePrefix: self.emojiTimePrefix,
+                                                      emojiTimePrefix: self.timePrefix,
                                                       delimiter: Logger.delimiter)
         // console logging
         debugPrint(debugMessage, terminator: "\n")
@@ -278,7 +341,7 @@ public enum SimpleLogger: String {
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
-                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_timePrefix,
                                                            delimiter: Logger.delimiter)
         SingleFileLogWriter.writeToFile(logFile_message)
     }
@@ -304,7 +367,7 @@ public enum SimpleLogger: String {
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
-                                                           logFile_emojiTimePrefix: self.logFile_emojiTimePrefix,
+                                                           logFile_emojiTimePrefix: self.logFile_timePrefix,
                                                            delimiter: Logger.delimiter)
         let source_fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
         let logFileName: String = "\(Logger.logFileName_timestamp())-\(source_fileName)"
@@ -349,6 +412,15 @@ extension SimpleLogger {
         case none           = 0
         case singleFile     = 1
         case multipleFiles  = 2
+    }
+}
+
+// MARK: - Prefix type
+extension SimpleLogger {
+    
+    public enum Prefix: UInt8 {
+        case ascii = 0
+        case emoji = 1
     }
 }
 
