@@ -135,7 +135,7 @@ public enum SimpleLogger: String {
     
     private var _logFile_asciiTimePrefix: String {
         let timeStampString: String = Logger.logFile_timestamp()
-        let prefix: String = "\(self.asciiValue) [\(timeStampString)]"
+        let prefix: String = "\(self.asciiValue)\t [\(timeStampString)]"
         return prefix
     }
     
