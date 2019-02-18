@@ -97,9 +97,9 @@ public enum SimpleLogger: String {
         let result: String
         switch Logger.prefix {
         case .ascii:
-            result = self._emojiTimePrefix
-        case .emoji:
             result = self._asciiTimePrefix
+        case .emoji:
+            result = self._emojiTimePrefix
         }
         return result
     }
