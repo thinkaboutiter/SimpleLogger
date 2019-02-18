@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
     :tag => s.version }
   s.platforms = { :ios => "10.0", :osx => "10.13", :watchos => "4.0", :tvos => "11.0" }
   s.requires_arc = true
-  s.source_files = 'Sources/SimpleLogger/*'
+  s.source_files = 'Sources/SimpleLogger/**/*'
 end
