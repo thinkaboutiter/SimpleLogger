@@ -13,19 +13,20 @@ Example:
 2. (Optional) Configure verbosity (`.full` by default)
     `Logger.useVerbosity(.full)`
 3. (Optional) Configure delimiter (`»` by default)
-    `Logger.useDelimiter("»")`
+    `Logger.useDelimiter(">")`
 4. (Optional) Configure source location path (enabled by default)
     `Logger.enableSourceLocationPrefix(true)`
-5. Write logs to disk:
-    5.1. Using single log file
+5. (Optional) Configure emoji or ascii prefix (`.emoji` by default)
+6. Write logs to disk:
+    - Using single log file
         - specifying maximum file size.
-    5.2. Using multiple log files
+    - Using multiple log files
         - log files created are after the name of the files the log is invoked in.
 
 # How to use
 1. Log message
     `Logger.debug.message("Some message to log")`
-2. Log message and object (methods are chain-able)
+2. Log message and object (methods are chainable)
     `Logger.debug.message("Some message to log").object(someObjectToDebug)`
 3. Check out sample project included.
 4. *nix OS compatible.
