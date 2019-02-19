@@ -88,9 +88,9 @@ public enum SimpleLogger: String {
     
     /// Opt to log path as prefix to the log message.
     /// Disabling this may mess the sinlge log file if it is used!.
-    fileprivate(set) public static var shouldLogPathPrefix: Bool = true
-    public static func set_shouldLogPathPrefix(_ newValue: Bool) {
-        Logger.shouldLogPathPrefix = newValue
+    fileprivate(set) public static var shouldLogFilePathPrefix: Bool = true
+    public static func set_shouldLogFilePathPrefix(_ newValue: Bool) {
+        Logger.shouldLogFilePathPrefix = newValue
     }
     
     fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
@@ -280,7 +280,7 @@ public enum SimpleLogger: String {
                          line: Int) -> Logger
     {
         let sourceLocationPrefix: String?
-        if Logger.shouldLogPathPrefix {
+        if Logger.shouldLogFilePathPrefix {
             sourceLocationPrefix = self._sourceLocationPrefix(filePath: filePath,
                                                               function: function,
                                                               line: line,
