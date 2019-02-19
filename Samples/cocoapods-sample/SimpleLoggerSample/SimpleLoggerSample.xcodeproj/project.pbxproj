@@ -123,6 +123,7 @@
 				TargetAttributes = {
 					4F7F9D161F72CE2F00EC3597 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -165,7 +166,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SimpleLoggerSample/Pods-SimpleLoggerSample-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-SimpleLoggerSample/Pods-SimpleLoggerSample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SimpleLogger/SimpleLogger.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -174,7 +175,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SimpleLoggerSample/Pods-SimpleLoggerSample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SimpleLoggerSample/Pods-SimpleLoggerSample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4FB06EB320A9D3D40094DD6A /* ShellScript */ = {

@@ -88,9 +88,39 @@ public enum SimpleLogger: String {
     
     /// Opt to log path as prefix to the log message.
     /// Disabling this may mess the sinlge log file if it is used!.
-    fileprivate(set) public static var shouldLogPathPrefix: Bool = true
-    public static func enable_shouldLogPathPrefix(_ newValue: Bool) {
-        Logger.shouldLogPathPrefix = newValue
+    fileprivate(set) public static var shouldLogFilePathPrefix: Bool = true
+    public static func set_shouldLogFilePathPrefix(_ newValue: Bool) {
+        Logger.shouldLogFilePathPrefix = newValue
+    }
+    
+    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
+    public static func use_fileLogging(_ newValue: SimpleLogger.FileLogging) {
+        Logger.fileLogging = newValue
+    }
+    
+    /// Sets log file(s) directory path when logging
+    public static func set_logsDirectoryPath(_ newValue: String) {
+        SingleFileLogWriter.update_logsDirectoryPath(newValue)
+        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
+    }
+    
+    /// obtains current directory path when invoked
+    /// precondition: when invoked with default value (#file)
+    public static func currentDirectoryPath(from path: String = #file) -> String? {
+        return WriterUtils.directoryPath(from: path)
+    }
+    
+    /// Sets log file name (filename + extension) when logging to single file is enabled.
+    /// default is `logfile.log`
+    public static func set_singleLogFileName(_ newValue: String) {
+        SingleFileLogWriter.update_logFileName(newValue)
+    }
+    
+    /// Maximum log file size in bytes.
+    /// When using single log file logging.
+    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
+    public static func set_singleLogFileMaxSizeInBytes(_ newValue: UInt64) {
+        SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var timePrefix: String {
@@ -137,36 +167,6 @@ public enum SimpleLogger: String {
         let timeStampString: String = Logger.logFile_timestamp()
         let prefix: String = "\(self.asciiValue)\t [\(timeStampString)]"
         return prefix
-    }
-    
-    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
-    public static func update_fileLogging(_ newValue: SimpleLogger.FileLogging) {
-        Logger.fileLogging = newValue
-    }
-    
-    /// Sets log file name (filename + extension) when logging to single file is enabled.
-    /// default is `logfile.log`
-    public static func setSingleLogFileName(_ newValue: String) {
-        SingleFileLogWriter.update_logFileName(newValue)
-    }
-    
-    /// Sets log file(s) directory path when logging
-    public static func setLogsDirectoryPath(_ newValue: String) {
-        SingleFileLogWriter.update_logsDirectoryPath(newValue)
-        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
-    }
-    
-    /// obtains current directory path when invoked
-    /// precondition: when invoked with default value (#file)
-    public static func currentDirectoryPath(from path: String = #file) -> String? {
-        return WriterUtils.directoryPath(from: path)
-    }
-    
-    /// Maximum log file size in bytes.
-    /// When using single log file logging.
-    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
-    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
-        SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
@@ -280,7 +280,7 @@ public enum SimpleLogger: String {
                          line: Int) -> Logger
     {
         let sourceLocationPrefix: String?
-        if Logger.shouldLogPathPrefix {
+        if Logger.shouldLogFilePathPrefix {
             sourceLocationPrefix = self._sourceLocationPrefix(filePath: filePath,
                                                               function: function,
                                                               line: line,
