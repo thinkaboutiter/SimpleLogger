@@ -10,18 +10,19 @@ Example:
 # How to Configure
 1. Enable logging (the TypeAlias `Logger` can be used instead of `SimpleLogger`)
     `Logger.enableLogging(true)`
-2. (Optional) Configure verbosity (`.full` by default)
-    `Logger.useVerbosity(.full)`
+2. (Optional) Configure verbosity - UInt32 value so it can be grouped with bitwise OR (|)
+    `Logger.use_verbosity(.all.rawValue)`
 3. (Optional) Configure delimiter (`»` by default)
-    `Logger.useDelimiter(">")`
-4. (Optional) Configure source location path (enabled by default)
-    `Logger.enableSourceLocationPrefix(true)`
+    `Logger.use_delimiter(">")`
+4. (Optional) Configure logging file path (enabled by default)
+    `Logger.set_shouldLogFilePathPrefix(true)`
 5. (Optional) Configure emoji or ascii prefix (`.emoji` by default)
 6. Write logs to disk:
     - Using single log file
         - specifying maximum file size.
     - Using multiple log files
         - log files created are after the name of the files the log is invoked in.
+7. And more...
 
 # How to use
 1. Log message
