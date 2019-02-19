@@ -93,6 +93,36 @@ public enum SimpleLogger: String {
         Logger.shouldLogPathPrefix = newValue
     }
     
+    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
+    public static func update_fileLogging(_ newValue: SimpleLogger.FileLogging) {
+        Logger.fileLogging = newValue
+    }
+    
+    /// Sets log file name (filename + extension) when logging to single file is enabled.
+    /// default is `logfile.log`
+    public static func setSingleLogFileName(_ newValue: String) {
+        SingleFileLogWriter.update_logFileName(newValue)
+    }
+    
+    /// Sets log file(s) directory path when logging
+    public static func setLogsDirectoryPath(_ newValue: String) {
+        SingleFileLogWriter.update_logsDirectoryPath(newValue)
+        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
+    }
+    
+    /// obtains current directory path when invoked
+    /// precondition: when invoked with default value (#file)
+    public static func currentDirectoryPath(from path: String = #file) -> String? {
+        return WriterUtils.directoryPath(from: path)
+    }
+    
+    /// Maximum log file size in bytes.
+    /// When using single log file logging.
+    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
+    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
+        SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
+    }
+    
     fileprivate var timePrefix: String {
         let result: String
         switch Logger.prefix {
@@ -137,36 +167,6 @@ public enum SimpleLogger: String {
         let timeStampString: String = Logger.logFile_timestamp()
         let prefix: String = "\(self.asciiValue)\t [\(timeStampString)]"
         return prefix
-    }
-    
-    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
-    public static func update_fileLogging(_ newValue: SimpleLogger.FileLogging) {
-        Logger.fileLogging = newValue
-    }
-    
-    /// Sets log file name (filename + extension) when logging to single file is enabled.
-    /// default is `logfile.log`
-    public static func setSingleLogFileName(_ newValue: String) {
-        SingleFileLogWriter.update_logFileName(newValue)
-    }
-    
-    /// Sets log file(s) directory path when logging
-    public static func setLogsDirectoryPath(_ newValue: String) {
-        SingleFileLogWriter.update_logsDirectoryPath(newValue)
-        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
-    }
-    
-    /// obtains current directory path when invoked
-    /// precondition: when invoked with default value (#file)
-    public static func currentDirectoryPath(from path: String = #file) -> String? {
-        return WriterUtils.directoryPath(from: path)
-    }
-    
-    /// Maximum log file size in bytes.
-    /// When using single log file logging.
-    /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
-    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
-        SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
     fileprivate var _verbosity: Verbosity {
