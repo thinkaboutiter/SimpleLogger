@@ -12,7 +12,7 @@ struct SingleFileLogWriter {
     
     // MARK: - Properties    
     fileprivate static var logsDirectoryPath: String = ""
-    static func update_logsDirectoryPath(_ newValue: String) {
+    static func setLogsDirectoryPath(_ newValue: String) {
         SingleFileLogWriter.logsDirectoryPath = newValue
         guard SingleFileLogWriter.logsDirectoryPath.count > 0 else {
             return
@@ -21,18 +21,18 @@ struct SingleFileLogWriter {
     }
     
     fileprivate static var logFileName: String = Constants.logFileDefaultName
-    static func update_logFileName(_ newValue: String) {
+    static func setLogFileName(_ newValue: String) {
         self.logFileName = newValue
     }
     
     /// Defaults to `Constants.defaultLogFileSizeInMegabytes`'s value (10 MB).
     /// NOTE: Zero or negative value will prevent file deletion! (Not recommended)
     fileprivate static var logFileMaxSizeInBytes: UInt64 = Constants.defaultLogFileSizeInMegabytes * Constants.bytesInMegabyte
-    static func update_logFileMaxSizeInBytes(_ newValue: UInt64) {
+    static func setLogFileMaxSizeInBytes(_ newValue: UInt64) {
         SingleFileLogWriter.logFileMaxSizeInBytes = newValue
     }
     
-    /// We should have only one logs directory
+    /// We should create logs directory only once
     fileprivate static var didCreateLogsDirectory: Bool = false
     
     // MARK: - Initialization

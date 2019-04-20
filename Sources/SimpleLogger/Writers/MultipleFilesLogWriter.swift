@@ -11,7 +11,7 @@ struct MultipleFilesLogWriter {
     
     // MARK: - Properties
     fileprivate static var logsDirectoryPath: String = ""
-    static func update_logsDirectoryPath(_ newValue: String) {
+    static func setLogsDirectoryPath(_ newValue: String) {
         MultipleFilesLogWriter.logsDirectoryPath = newValue
         guard MultipleFilesLogWriter.logsDirectoryPath.count > 0 else {
             return
