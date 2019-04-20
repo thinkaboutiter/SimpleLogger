@@ -51,7 +51,7 @@ struct WriterUtils {
     }
     
     static func write(_ candidate: String,
-                      toFileAtPath path: String)
+                      toFileAtPath path: String) throws
     {
         let fm = FileManager.default
         if !fm.fileExists(atPath: path) {
@@ -83,17 +83,13 @@ struct WriterUtils {
         valid_fileHandle.closeFile()
     }
     
-    static func removeFile(at path: String) {
+    static func removeFile(at path: String) throws {
         let fm = FileManager.default
         guard fm.fileExists(atPath: path) else {
-            return
+            let message: String = "File doesn't exit at path=\(path)"
+            throw WriterUtilsError.removeFile(reason: message)
         }
-        do {
-            try fm.removeItem(atPath: path)
-        }
-        catch {
-            print("error:\(error)")
-        }
+        try fm.removeItem(atPath: path)
     }
     
     static func fileSize(at path: String) -> UInt64 {
@@ -108,5 +104,14 @@ struct WriterUtils {
             return 0
         }
         return valid_fileSize
+    }
+}
+
+// MARK: - Errors
+extension WriterUtils {
+    
+    enum WriterUtilsError: Error {
+        case writeToFile(reason: String)
+        case removeFile(reason: String)
     }
 }

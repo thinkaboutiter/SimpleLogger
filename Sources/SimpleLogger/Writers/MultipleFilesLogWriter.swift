@@ -27,20 +27,20 @@ struct MultipleFilesLogWriter {
     
     // MARK: - Utils
     static func write(_ candidate: String,
-                      toFile fileName: String)
+                      toFile fileName: String) throws
     {
         guard MultipleFilesLogWriter.didCreateLogsDirectory else {
             let message: String = "Logs directory not available"
             print(message)
-            return
+            throw MultipleFilesLogWriterError.writeToFile(reason: message)
         }
         let path_candidate: String = "\(MultipleFilesLogWriter.logsDirectoryPath)/\(fileName)\(Constants.logFileExtension)"
         guard let valid_absolutePath: String = WriterUtils.absoulutePathString(from: path_candidate) else {
             let message: String = "Invalid log file path!"
             print(message)
-            return
+            throw MultipleFilesLogWriterError.writeToFile(reason: message)
         }
-        WriterUtils.write(candidate, toFileAtPath: valid_absolutePath)
+        try WriterUtils.write(candidate, toFileAtPath: valid_absolutePath)
     }
     
     fileprivate static func createLogsDirectory(at path: String) {
@@ -55,5 +55,12 @@ extension MultipleFilesLogWriter {
     
     fileprivate struct Constants {
         static let logFileExtension: String = ".log"
+    }
+}
+
+extension MultipleFilesLogWriter {
+    
+    enum MultipleFilesLogWriterError: Error {
+        case writeToFile(reason: String)
     }
 }
