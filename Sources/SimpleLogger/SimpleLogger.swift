@@ -101,7 +101,7 @@ public enum SimpleLogger: String {
     /// Sets log file(s) directory path when logging
     public static func setLogsDirectoryPath(_ newValue: String) {
         SingleFileLogWriter.update_logsDirectoryPath(newValue)
-        MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
+        MultipleFilesLogWriter.setLogsDirectoryPath(newValue)
     }
     
     /// obtains current directory path when invoked
