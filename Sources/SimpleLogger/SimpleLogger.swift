@@ -343,7 +343,12 @@ public enum SimpleLogger: String {
                                                            sourceLocationPrefix: sourceLocationPrefix,
                                                            logFile_emojiTimePrefix: self.logFile_timePrefix,
                                                            delimiter: Logger.delimiter)
-        SingleFileLogWriter.writeToFile(logFile_message)
+        do {
+            try SingleFileLogWriter.writeToFile(logFile_message)
+        }
+        catch {
+            print("Internal error: \(error)")
+        }
     }
     
     private func _logFileMessage(from message: String?,
@@ -371,8 +376,12 @@ public enum SimpleLogger: String {
                                                            delimiter: Logger.delimiter)
         let source_fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
         let logFileName: String = "\(Logger.logFileName_timestamp())-\(source_fileName)"
-        MultipleFilesLogWriter.write(logFile_message, toFile: logFileName)
-
+        do {
+            try MultipleFilesLogWriter.write(logFile_message, toFile: logFileName)
+        }
+        catch {
+            print("Internal error: \(error)")
+        }
     }
     
     /// Logging object.

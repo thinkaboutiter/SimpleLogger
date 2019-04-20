@@ -20,7 +20,7 @@ struct SingleFileLogWriter {
         SingleFileLogWriter.createLogsDirectory(at: self.logsDirectoryPath)
     }
     
-    fileprivate static var logFileName: String = Constants.logFileDefaultName
+    fileprivate static var logFileName: String = Constants.defaultLogFileName
     static func setLogFileName(_ newValue: String) {
         self.logFileName = newValue
     }
@@ -39,19 +39,17 @@ struct SingleFileLogWriter {
     fileprivate init() {}
     
     // MARK: - Utils    
-    static func writeToFile(_ candidate: String) {
+    static func writeToFile(_ candidate: String) throws {
         guard SingleFileLogWriter.didCreateLogsDirectory else {
             let message: String = "Logs directory not available"
-            print(message)
-            return
+            throw SingleFileLogWriterError.writeToFile(reason: message)
         }
         guard let valid_logFilePath: String = SingleFileLogWriter.logFilePath() else {
             let message: String = "Unable to obtain log_file_path!"
-            print(message)
-            return
+            throw SingleFileLogWriterError.writeToFile(reason: message)
         }
-        WriterUtils.write(candidate, toFileAtPath: valid_logFilePath)
-        SingleFileLogWriter.cleanUpIfNeeded()
+        try WriterUtils.write(candidate, toFileAtPath: valid_logFilePath)
+        try SingleFileLogWriter.cleanUpIfNeeded()
     }
     
     fileprivate static func createLogsDirectory(at path: String) {
@@ -72,18 +70,19 @@ struct SingleFileLogWriter {
         return valid_absoulutePathString
     }
     
-    fileprivate static func cleanUpIfNeeded() {
-        guard let valid_logFilePath: String = SingleFileLogWriter.logFilePath() else {
-            return
-        }
+    fileprivate static func cleanUpIfNeeded() throws {
         guard SingleFileLogWriter.logFileMaxSizeInBytes > 0 else {
             return
+        }
+        guard let valid_logFilePath: String = SingleFileLogWriter.logFilePath() else {
+            let message: String = "Invalid log file path!"
+            throw SingleFileLogWriterError.removeFile(reason: message)
         }
         let fileSize: UInt64 = SingleFileLogWriter.fileSize(at: valid_logFilePath)
         guard fileSize > SingleFileLogWriter.logFileMaxSizeInBytes else {
             return
         }
-        WriterUtils.removeFile(at: valid_logFilePath)
+        try WriterUtils.removeFile(at: valid_logFilePath)
     }
     
     fileprivate static func fileSize(at path: String) -> UInt64 {
@@ -94,8 +93,15 @@ struct SingleFileLogWriter {
 extension SingleFileLogWriter {
     
     fileprivate struct Constants {
-        static let logFileDefaultName: String = "logfile.log"
+        static let defaultLogFileName: String = "logfile.log"
         static let bytesInMegabyte: UInt64 = 1024 * 1024
         static let defaultLogFileSizeInMegabytes: UInt64 = 10
+    }
+}
+
+extension SingleFileLogWriter {
+    enum SingleFileLogWriterError: Error {
+        case writeToFile(reason: String)
+        case removeFile(reason: String)
     }
 }
