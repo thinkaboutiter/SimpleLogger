@@ -70,36 +70,36 @@ public enum SimpleLogger: String {
     // MARK: Properies
     /// Logging verbosity (using verbosity toggles).
     fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
-    public static func use_verbosity(_ newValue: UInt32) {
+    public static func setVerbosityLevel(_ newValue: UInt32) {
         Logger.verbosityLevel = newValue
     }
     
     /// Prefixes delimiter string.
     fileprivate(set) public static var delimiter: String = "»"
-    public static func use_delimiter(_ newValue: String) {
+    public static func setDelimiter(_ newValue: String) {
         Logger.delimiter = newValue
     }
     
     /// Prefix customization.
     fileprivate(set) public static var prefix: SimpleLogger.Prefix = .emoji
-    public static func use_prefix(_ newValue: SimpleLogger.Prefix) {
+    public static func setPrefix(_ newValue: SimpleLogger.Prefix) {
         Logger.prefix = newValue
     }
     
     /// Opt to log path as prefix to the log message.
     /// Disabling this may mess the sinlge log file if it is used!.
     fileprivate(set) public static var shouldLogFilePathPrefix: Bool = true
-    public static func set_shouldLogFilePathPrefix(_ newValue: Bool) {
+    public static func setShouldLogFilePathPrefix(_ newValue: Bool) {
         Logger.shouldLogFilePathPrefix = newValue
     }
     
     fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
-    public static func use_fileLogging(_ newValue: SimpleLogger.FileLogging) {
+    public static func setFileLogging(_ newValue: SimpleLogger.FileLogging) {
         Logger.fileLogging = newValue
     }
     
     /// Sets log file(s) directory path when logging
-    public static func set_logsDirectoryPath(_ newValue: String) {
+    public static func setLogsDirectoryPath(_ newValue: String) {
         SingleFileLogWriter.update_logsDirectoryPath(newValue)
         MultipleFilesLogWriter.update_logsDirectoryPath(newValue)
     }
@@ -112,14 +112,14 @@ public enum SimpleLogger: String {
     
     /// Sets log file name (filename + extension) when logging to single file is enabled.
     /// default is `logfile.log`
-    public static func set_singleLogFileName(_ newValue: String) {
+    public static func setSingleLogFileName(_ newValue: String) {
         SingleFileLogWriter.update_logFileName(newValue)
     }
     
     /// Maximum log file size in bytes.
     /// When using single log file logging.
     /// NOTE: Zero or negative value will prevent file deletion upon reaching set max size! (Not recommended)
-    public static func set_singleLogFileMaxSizeInBytes(_ newValue: UInt64) {
+    public static func setSingleLogFileMaxSizeInBytes(_ newValue: UInt64) {
         SingleFileLogWriter.update_logFileMaxSizeInBytes(newValue)
     }
     
