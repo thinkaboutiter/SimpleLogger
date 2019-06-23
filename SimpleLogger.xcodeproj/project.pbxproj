@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4FAE391C22C0082700695818 /* SimpleLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FAE391A22C0073600695818 /* SimpleLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		OBJ_27 /* SimpleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SimpleLogger.swift */; };
 		OBJ_28 /* MultipleFilesLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* MultipleFilesLogWriter.swift */; };
 		OBJ_29 /* SingleFileLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SingleFileLogWriter.swift */; };
@@ -27,7 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4FAE391922C0025E00695818 /* SimpleLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleLogger.h; sourceTree = "<group>"; };
+		4FAE391A22C0073600695818 /* SimpleLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimpleLogger.h; path = Sources/SimpleLogger.h; sourceTree = "<group>"; };
 		OBJ_11 /* MultipleFilesLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleFilesLogWriter.swift; sourceTree = "<group>"; };
 		OBJ_12 /* SingleFileLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFileLogWriter.swift; sourceTree = "<group>"; };
 		OBJ_13 /* WriterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterUtils.swift; sourceTree = "<group>"; };
@@ -111,7 +112,7 @@
 			children = (
 				OBJ_8 /* SimpleLogger */,
 				OBJ_14 /* SimpleLoggerCLITest */,
-				4FAE391922C0025E00695818 /* SimpleLogger.h */,
+				4FAE391A22C0073600695818 /* SimpleLogger.h */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -128,11 +129,23 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		4FAE391B22C0081F00695818 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FAE391C22C0082700695818 /* SimpleLogger.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		"SimpleLogger::SimpleLogger" /* SimpleLogger */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_23 /* Build configuration list for PBXNativeTarget "SimpleLogger" */;
 			buildPhases = (
+				4FAE391B22C0081F00695818 /* Headers */,
 				OBJ_26 /* Sources */,
 				OBJ_31 /* Frameworks */,
 			);
