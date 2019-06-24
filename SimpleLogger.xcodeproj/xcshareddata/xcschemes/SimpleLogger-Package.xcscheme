@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
-            BuildableName = "SimpleLoggerCLITest"
-            BlueprintName = "SimpleLoggerCLITest"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
             ReferencedContainer = "container:SimpleLogger.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,6 +51,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
+            ReferencedContainer = "container:SimpleLogger.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
