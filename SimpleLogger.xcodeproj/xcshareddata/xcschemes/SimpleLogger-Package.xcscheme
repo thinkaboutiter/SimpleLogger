@@ -14,20 +14,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
-               BuildableName = "SimpleLoggerCLITest"
-               BlueprintName = "SimpleLoggerCLITest"
-               ReferencedContainer = "container:SimpleLogger.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "SimpleLogger::SimpleLogger"
                BuildableName = "SimpleLogger.framework"
                BlueprintName = "SimpleLogger"
@@ -43,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
+            ReferencedContainer = "container:SimpleLogger.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -59,9 +54,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
-            BuildableName = "SimpleLoggerCLITest"
-            BlueprintName = "SimpleLoggerCLITest"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
             ReferencedContainer = "container:SimpleLogger.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -74,6 +69,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
+            ReferencedContainer = "container:SimpleLogger.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
