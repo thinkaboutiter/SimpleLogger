@@ -27,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4FCB95EE22C11A93005AD7EF /* SimpleLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimpleLogger.h; path = Sources/SimpleLogger.h; sourceTree = "<group>"; };
 		OBJ_11 /* MultipleFilesLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleFilesLogWriter.swift; sourceTree = "<group>"; };
 		OBJ_12 /* SingleFileLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFileLogWriter.swift; sourceTree = "<group>"; };
 		OBJ_13 /* WriterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterUtils.swift; sourceTree = "<group>"; };
@@ -119,6 +120,7 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4FCB95EE22C11A93005AD7EF /* SimpleLogger.h */,
 				OBJ_8 /* SimpleLogger */,
 				OBJ_14 /* SimpleLoggerCLITest */,
 			);
