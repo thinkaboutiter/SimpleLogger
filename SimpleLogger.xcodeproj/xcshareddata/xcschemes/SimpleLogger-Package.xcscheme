@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
-               BuildableName = "SimpleLoggerCLITest"
-               BlueprintName = "SimpleLoggerCLITest"
+               BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+               BuildableName = "SimpleLogger.framework"
+               BlueprintName = "SimpleLogger"
                ReferencedContainer = "container:SimpleLogger.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SimpleLogger::SimpleLogger"
-               BuildableName = "SimpleLogger.framework"
-               BlueprintName = "SimpleLogger"
+               BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
+               BuildableName = "SimpleLoggerCLITest"
+               BlueprintName = "SimpleLoggerCLITest"
                ReferencedContainer = "container:SimpleLogger.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -59,9 +59,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SimpleLogger::SimpleLoggerCLITest"
-            BuildableName = "SimpleLoggerCLITest"
-            BlueprintName = "SimpleLoggerCLITest"
+            BlueprintIdentifier = "SimpleLogger::SimpleLogger"
+            BuildableName = "SimpleLogger.framework"
+            BlueprintName = "SimpleLogger"
             ReferencedContainer = "container:SimpleLogger.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
