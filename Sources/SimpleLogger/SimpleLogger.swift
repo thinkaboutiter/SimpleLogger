@@ -239,6 +239,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func message(_ message: String? = nil,
+                        writeToFile: Bool = false,
                         filePath: String = #file,
                         function: String = #function,
                         line: Int = #line) -> Logger
@@ -248,6 +249,7 @@ public enum SimpleLogger: String {
         }
         
         return self.log(message: message,
+                        writeToFile: writeToFile,
                         filePath: filePath,
                         function: function,
                         line: line)
@@ -258,6 +260,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func object(_ object: Any?,
+                       writeToFile: Bool = false,
                        filePath: String = #file,
                        function: String = #function,
                        line: Int = #line) -> Logger
@@ -266,6 +269,7 @@ public enum SimpleLogger: String {
             return self
         }
         return self.log(any: object,
+                        writeToFile: writeToFile,
                         filePath: filePath,
                         function: function,
                         line: line)
@@ -275,6 +279,7 @@ public enum SimpleLogger: String {
     /// Logging message.
     @discardableResult
     fileprivate func log(message: String?,
+                         writeToFile: Bool = true,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
@@ -297,6 +302,9 @@ public enum SimpleLogger: String {
         debugPrint(debugMessage, terminator: "\n")
         
         // file logging
+        guard writeToFile else {
+            return self
+        }
         switch Logger.fileLogging {
         case .none:
             break
@@ -336,6 +344,38 @@ public enum SimpleLogger: String {
         return result
     }
     
+    /// Logging object.
+    @discardableResult
+    fileprivate func log(any: Any?,
+                         writeToFile: Bool = true,
+                         filePath: String,
+                         function: String,
+                         line: Int) -> Logger
+    {
+        // console logging
+        #if os(Linux)
+        debugPrint(any ?? "<null>", terminator: "\n\n")
+        #else
+        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
+        debugPrint(pointer, terminator: "\n")
+        debugPrint(any as AnyObject, terminator: "\n\n")
+        #endif
+        
+        // file logging
+        guard writeToFile else {
+            return self
+        }
+        switch Logger.fileLogging {
+        case .none:
+            break
+        case .singleFile:
+            self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+        case .multipleFiles:
+            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
+        }
+        return self
+    }
+}
     fileprivate func writeToSingleLogFile(_ message: String?,
                                           sourceLocationPrefix: String?)
     {
