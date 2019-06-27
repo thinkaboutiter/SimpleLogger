@@ -20,7 +20,7 @@ private func log_message() {
     Logger.cache.message("Logging `cache` message")
 }
 
-private func log_object() {
+private func log_objects() {
     // array
     let sampleArray: [Int] = [
         0,
@@ -39,6 +39,36 @@ private func log_object() {
     ]
     Logger.debug.message("Dictionary:").object(sampleDictionary)
 }
+fileprivate struct Constants {
+    static let scope_1_name: String = "scope_1"
+}
+private func log_scopeObjects() {
+    // array
+    let sampleArray: [Int] = [
+        0,
+        1,
+        2,
+        3
+    ]
+    Logger.debug
+        .message("Array:",
+                 scopeName: Constants.scope_1_name)
+        .object(sampleArray,
+                scopeName: Constants.scope_1_name)
+    
+    // dictionary
+    let sampleDictionary: [String: String] = [
+        "key_0": "value_0",
+        "key_1": "value_1",
+        "key_2": "value_2",
+        "key_3": "value_3"
+    ]
+    Logger.debug
+        .message("Dictionary:",
+                 scopeName: Constants.scope_1_name)
+        .object(sampleDictionary,
+                scopeName: Constants.scope_1_name)
+}
 
 private func log_nil() {
     Logger.debug.message("Logging nil:").object(nil)
@@ -46,7 +76,8 @@ private func log_nil() {
 
 private func exerciseSimpleLogger() {
     log_message()
-    log_object()
+    log_objects()
+    log_scopeObjects()
     log_nil()
 }
 
