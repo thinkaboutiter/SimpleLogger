@@ -35,3 +35,7 @@ Example:
     - if logging_to_file(s) is different than `.none` 
     default parameter `writeToFile: Bool = true` can be used to alter what is written to log file(s)
     this would require manual change per each log line used though
+2. If `.multipleFiles` file logging is used
+    - using optional `scopeName: String? = nil` parameter with none-nil value (ex. "loginFlow")
+    will create log files by `scopeName`-s rather than by `fileName`-s.
+    

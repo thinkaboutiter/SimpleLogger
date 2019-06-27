@@ -93,7 +93,8 @@ public enum SimpleLogger: String {
         Logger.shouldLogFilePathPrefix = newValue
     }
     
-    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
+    /// Used to enable writing logs into single or multiple files.
+    fileprivate(set) public static var fileLogging: SimpleLogger.FileLogging = .none
     public static func setFileLogging(_ newValue: SimpleLogger.FileLogging) {
         Logger.fileLogging = newValue
     }
@@ -232,7 +233,10 @@ public enum SimpleLogger: String {
     
     // MARK: - Logging
     /// Logging a message.
-    /// - parameter message: The message to be logged.
+    /// - parameter message: optional message to be logged. if it is nil only date/file/function/line will be logged.
+    /// - parameter writeToFile: defaults to true, can be altered per invocation so `message` won't be written into log file.
+    /// - parameter scopeName: optional parameter defaults to `nil`. If used logFile with `scopeName` will be used to write the message into when `.multipleFiles` file logging is used.
+    /// This can be useful if we want to crate log files based on different `scope`-s than `source_file_name`-s.
     /// - parameter filePath: file in which this function is invoked.
     /// - parameter function: the outer function in which this function is invoked.
     /// - parameter line: the number of the line at which this function is invoked.
@@ -240,6 +244,7 @@ public enum SimpleLogger: String {
     @discardableResult
     public func message(_ message: String? = nil,
                         writeToFile: Bool = true,
+                        scopeName: String? = nil,
                         filePath: String = #file,
                         function: String = #function,
                         line: Int = #line) -> Logger
@@ -250,17 +255,25 @@ public enum SimpleLogger: String {
         
         return self.log(message: message,
                         writeToFile: writeToFile,
+                        scopeName: scopeName,
                         filePath: filePath,
                         function: function,
                         line: line)
     }
     
     /// Logging an object.
-    /// - parameter object: the object/value to be logged.
+    /// - parameter object: optional object/value to be logged. if it is nil only date/file/function/line will be logged.
+    /// - parameter writeToFile: defaults to true, can be altered per invocation so `object` won't be written into log file.
+    /// - parameter scopeName: optional parameter defaults to `nil`. If used logFile with `scopeName` will be used to write the object/value into when `.multipleFiles` file logging is used.
+    /// This can be useful if we want to crate log files based on different `scope`-s than `source_file_name`-s.
+    /// - parameter filePath: file in which this function is invoked.
+    /// - parameter function: the outer function in which this function is invoked.
+    /// - parameter line: the number of the line at which this function is invoked.
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func object(_ object: Any?,
                        writeToFile: Bool = true,
+                       scopeName: String? = nil,
                        filePath: String = #file,
                        function: String = #function,
                        line: Int = #line) -> Logger
@@ -270,6 +283,7 @@ public enum SimpleLogger: String {
         }
         return self.log(any: object,
                         writeToFile: writeToFile,
+                        scopeName: scopeName,
                         filePath: filePath,
                         function: function,
                         line: line)
@@ -280,6 +294,7 @@ public enum SimpleLogger: String {
     @discardableResult
     fileprivate func log(message: String?,
                          writeToFile: Bool,
+                         scopeName: String?,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
@@ -307,12 +322,17 @@ public enum SimpleLogger: String {
         case .none:
             break
         case .singleFile:
-            self.writeToSingleLogFile(message,
-                                      sourceLocationPrefix: sourceLocationPrefix)
+            self.writeToSingleLogFile(
+                message,
+                sourceLocationPrefix: sourceLocationPrefix
+            )
         case .multipleFiles:
-            self.write(message,
-                       filePath: filePath,
-                       sourceLocationPrefix: sourceLocationPrefix)
+            let resolved_filePath: String = scopeName ?? filePath
+            self.write(
+                message,
+                filePath: resolved_filePath,
+                sourceLocationPrefix: sourceLocationPrefix
+            )
         }
         return self
     }
@@ -346,6 +366,7 @@ public enum SimpleLogger: String {
     @discardableResult
     fileprivate func log(any: Any?,
                          writeToFile: Bool,
+                         scopeName: String?,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
@@ -367,9 +388,17 @@ public enum SimpleLogger: String {
         case .none:
             break
         case .singleFile:
-            self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+            self.writeToSingleLogFile(
+                "\(any ?? "<null>")",
+                sourceLocationPrefix: nil
+            )
         case .multipleFiles:
-            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
+            let resolved_filePath: String = scopeName ?? filePath
+            self.write(
+                "\(any ?? "<null>")",
+                filePath: resolved_filePath,
+                sourceLocationPrefix: nil
+            )
         }
         return self
     }
