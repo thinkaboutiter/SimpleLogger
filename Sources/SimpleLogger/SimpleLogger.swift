@@ -239,7 +239,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func message(_ message: String? = nil,
-                        writeToFile: Bool = false,
+                        writeToFile: Bool = true,
                         filePath: String = #file,
                         function: String = #function,
                         line: Int = #line) -> Logger
@@ -260,7 +260,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func object(_ object: Any?,
-                       writeToFile: Bool = false,
+                       writeToFile: Bool = true,
                        filePath: String = #file,
                        function: String = #function,
                        line: Int = #line) -> Logger
@@ -279,7 +279,7 @@ public enum SimpleLogger: String {
     /// Logging message.
     @discardableResult
     fileprivate func log(message: String?,
-                         writeToFile: Bool = true,
+                         writeToFile: Bool,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
@@ -345,7 +345,7 @@ public enum SimpleLogger: String {
     /// Logging object.
     @discardableResult
     fileprivate func log(any: Any?,
-                         writeToFile: Bool = true,
+                         writeToFile: Bool,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
