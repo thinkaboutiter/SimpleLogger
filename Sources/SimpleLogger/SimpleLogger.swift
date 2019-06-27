@@ -93,7 +93,8 @@ public enum SimpleLogger: String {
         Logger.shouldLogFilePathPrefix = newValue
     }
     
-    fileprivate(set) static var fileLogging: SimpleLogger.FileLogging = .none
+    /// Used to enable writing logs into single or multiple files.
+    fileprivate(set) public static var fileLogging: SimpleLogger.FileLogging = .none
     public static func setFileLogging(_ newValue: SimpleLogger.FileLogging) {
         Logger.fileLogging = newValue
     }
@@ -232,7 +233,8 @@ public enum SimpleLogger: String {
     
     // MARK: - Logging
     /// Logging a message.
-    /// - parameter message: The message to be logged.
+    /// - parameter message: optional message to be logged. if it is nil only date/file/function/line will be logged.
+    /// - parameter writeToFile: defaults to true, can be altered per invocation so `message` won't be written into log file.
     /// - parameter filePath: file in which this function is invoked.
     /// - parameter function: the outer function in which this function is invoked.
     /// - parameter line: the number of the line at which this function is invoked.
@@ -256,7 +258,11 @@ public enum SimpleLogger: String {
     }
     
     /// Logging an object.
-    /// - parameter object: the object/value to be logged.
+    /// - parameter object: optional object/value to be logged. if it is nil only date/file/function/line will be logged.
+    /// - parameter writeToFile: defaults to true, can be altered per invocation so `object` won't be written into log file.
+    /// - parameter filePath: file in which this function is invoked.
+    /// - parameter function: the outer function in which this function is invoked.
+    /// - parameter line: the number of the line at which this function is invoked.
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func object(_ object: Any?,
