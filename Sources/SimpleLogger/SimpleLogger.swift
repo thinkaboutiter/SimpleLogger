@@ -239,6 +239,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func message(_ message: String? = nil,
+                        writeToFile: Bool = false,
                         filePath: String = #file,
                         function: String = #function,
                         line: Int = #line) -> Logger
@@ -248,6 +249,7 @@ public enum SimpleLogger: String {
         }
         
         return self.log(message: message,
+                        writeToFile: writeToFile,
                         filePath: filePath,
                         function: function,
                         line: line)
@@ -258,6 +260,7 @@ public enum SimpleLogger: String {
     /// - returns: Logger value so additional logging methods can be chained if needed.
     @discardableResult
     public func object(_ object: Any?,
+                       writeToFile: Bool = false,
                        filePath: String = #file,
                        function: String = #function,
                        line: Int = #line) -> Logger
@@ -266,6 +269,7 @@ public enum SimpleLogger: String {
             return self
         }
         return self.log(any: object,
+                        writeToFile: writeToFile,
                         filePath: filePath,
                         function: function,
                         line: line)
@@ -275,6 +279,7 @@ public enum SimpleLogger: String {
     /// Logging message.
     @discardableResult
     fileprivate func log(message: String?,
+                         writeToFile: Bool = true,
                          filePath: String,
                          function: String,
                          line: Int) -> Logger
@@ -283,20 +288,21 @@ public enum SimpleLogger: String {
         if Logger.shouldLogFilePathPrefix {
             sourceLocationPrefix = self._sourceLocationPrefix(filePath: filePath,
                                                               function: function,
-                                                              line: line,
-                                                              delimiter: Logger.delimiter)
+                                                              line: line)
         }
         else {
             sourceLocationPrefix = nil
         }
         let debugMessage: String = self._debugMessage(from: message,
-                                                      sourceLocationPrefix: sourceLocationPrefix,
-                                                      emojiTimePrefix: self.timePrefix,
-                                                      delimiter: Logger.delimiter)
+                                                      timePrefix: self.timePrefix,
+                                                      sourceLocationPrefix: sourceLocationPrefix)
         // console logging
         debugPrint(debugMessage, terminator: "\n")
         
         // file logging
+        guard writeToFile else {
+            return self
+        }
         switch Logger.fileLogging {
         case .none:
             break
@@ -314,7 +320,7 @@ public enum SimpleLogger: String {
     private func _sourceLocationPrefix(filePath: String,
                                        function: String,
                                        line: Int,
-                                       delimiter: String) -> String
+                                       delimiter: String = Logger.delimiter) -> String
     {
         let fileName: String = URL(fileURLWithPath: filePath).lastPathComponent
         let result = "\(delimiter) \(fileName) \(delimiter) \(function) \(delimiter) \(line)"
@@ -322,19 +328,55 @@ public enum SimpleLogger: String {
     }
     
     private func _debugMessage(from message: String?,
+                               timePrefix: String,
                                sourceLocationPrefix: String?,
-                               emojiTimePrefix: String,
-                               delimiter: String) -> String
+                               delimiter: String = Logger.delimiter) -> String
     {
         let result: String
         if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
-            result = "\(emojiTimePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
+            result = "\(timePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
         }
         else {
-            result = "\(emojiTimePrefix) \(delimiter) \(message ?? "")"
+            result = "\(timePrefix) \(delimiter) \(message ?? "")"
         }
         return result
     }
+    
+    /// Logging object.
+    @discardableResult
+    fileprivate func log(any: Any?,
+                         writeToFile: Bool = true,
+                         filePath: String,
+                         function: String,
+                         line: Int) -> Logger
+    {
+        // console logging
+        #if os(Linux)
+        debugPrint(any ?? "<null>", terminator: "\n\n")
+        #else
+        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
+        debugPrint(pointer, terminator: "\n")
+        debugPrint(any as AnyObject, terminator: "\n\n")
+        #endif
+        
+        // file logging
+        guard writeToFile else {
+            return self
+        }
+        switch Logger.fileLogging {
+        case .none:
+            break
+        case .singleFile:
+            self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
+        case .multipleFiles:
+            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
+        }
+        return self
+    }
+}
+
+// MARK: - Writing to file
+extension SimpleLogger {
     
     fileprivate func writeToSingleLogFile(_ message: String?,
                                           sourceLocationPrefix: String?)
@@ -349,21 +391,6 @@ public enum SimpleLogger: String {
         catch {
             print("Internal error: \(error)")
         }
-    }
-    
-    private func _logFileMessage(from message: String?,
-                                 sourceLocationPrefix: String?,
-                                 logFile_emojiTimePrefix: String,
-                                 delimiter: String) -> String
-    {
-        let result: String
-        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
-            result = "\(logFile_emojiTimePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
-        }
-        else {
-            result = "\(logFile_emojiTimePrefix) \(delimiter) \(message ?? "")"
-        }
-        return result
     }
     
     fileprivate func write(_ message: String?,
@@ -384,33 +411,19 @@ public enum SimpleLogger: String {
         }
     }
     
-    /// Logging object.
-    @discardableResult
-    fileprivate func log(any: Any?,
-                         filePath: String,
-                         function: String,
-                         line: Int) -> Logger
+    private func _logFileMessage(from message: String?,
+                                 sourceLocationPrefix: String?,
+                                 logFile_emojiTimePrefix: String,
+                                 delimiter: String) -> String
     {
-        // file logging
-        switch Logger.fileLogging {
-        case .none:
-            break
-        case .singleFile:
-            self.writeToSingleLogFile("\(any ?? "<null>")", sourceLocationPrefix: nil)
-        case .multipleFiles:
-            self.write("\(any ?? "<null>")", filePath: filePath, sourceLocationPrefix: nil)
+        let result: String
+        if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
+            result = "\(logFile_emojiTimePrefix) \(valid_sourceLocationPrefix) \(delimiter) \(message ?? "")"
         }
-        
-        // console logging
-        #if os(Linux)
-            debugPrint(any ?? "<null>", terminator: "\n\n")
-            return self
-        #else
-            let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
-            debugPrint(pointer, terminator: "\n")
-            debugPrint(any as AnyObject, terminator: "\n\n")
-            return self
-        #endif
+        else {
+            result = "\(logFile_emojiTimePrefix) \(delimiter) \(message ?? "")"
+        }
+        return result
     }
 }
 
