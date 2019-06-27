@@ -22,12 +22,16 @@ Example:
         - specifying maximum file size.
     - Using multiple log files
         - log files created are after the name of the files the log is invoked in.
-7. And more...
 
 # How to use
-1. Log message
+1. Log a message
     `Logger.debug.message("Some message to log")`
-2. Log message and object (methods are chainable)
-    `Logger.debug.message("Some message to log").object(someObjectToDebug)`
+2. Log a message and an object (methods are chainable)
+    `Logger.debug.message("Some message to log").object(someObjectToLog)`
 3. Check out sample project included.
-4. *nix OS compatible.
+
+# Notes
+1. By default loggin_to_file(s) is set to `.none`
+    - if logging_to_file(s) is different than `.none` 
+    default parameter `writeToFile: Bool = true` can be used to alter what is written to log file(s)
+    this would require manual change per each log line used though
