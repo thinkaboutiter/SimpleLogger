@@ -235,7 +235,8 @@ public enum SimpleLogger: String {
     /// Logging a message.
     /// - parameter message: optional message to be logged. if it is nil only date/file/function/line will be logged.
     /// - parameter writeToFile: defaults to true, can be altered per invocation so `message` won't be written into log file.
-    /// - parameter scopeName: optional parameter defaults to `nil`. if used logFile with `scopeName` will be used to write the message into when `.multipleFiles` file logging is used.
+    /// - parameter scopeName: optional parameter defaults to `nil`. If used logFile with `scopeName` will be used to write the message into when `.multipleFiles` file logging is used.
+    /// This can be useful if we want to crate log files based on different `scope`-s than `source_file_name`-s.
     /// - parameter filePath: file in which this function is invoked.
     /// - parameter function: the outer function in which this function is invoked.
     /// - parameter line: the number of the line at which this function is invoked.
@@ -263,7 +264,8 @@ public enum SimpleLogger: String {
     /// Logging an object.
     /// - parameter object: optional object/value to be logged. if it is nil only date/file/function/line will be logged.
     /// - parameter writeToFile: defaults to true, can be altered per invocation so `object` won't be written into log file.
-    /// - parameter scopeName: optional parameter defaults to `nil`. if used logFile with `scopeName` will be used to write the object/value into when `.multipleFiles` file logging is used.
+    /// - parameter scopeName: optional parameter defaults to `nil`. If used logFile with `scopeName` will be used to write the object/value into when `.multipleFiles` file logging is used.
+    /// This can be useful if we want to crate log files based on different `scope`-s than `source_file_name`-s.
     /// - parameter filePath: file in which this function is invoked.
     /// - parameter function: the outer function in which this function is invoked.
     /// - parameter line: the number of the line at which this function is invoked.
