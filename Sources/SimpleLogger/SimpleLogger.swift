@@ -372,13 +372,7 @@ public enum SimpleLogger: String {
                          line: Int) -> Logger
     {
         // console logging
-        #if os(Linux)
         debugPrint(any ?? "<null>", terminator: "\n\n")
-        #else
-        let pointer: UnsafeMutableRawPointer = Unmanaged.passUnretained(any as AnyObject).toOpaque()
-        debugPrint(pointer, terminator: "\n")
-        debugPrint(any as AnyObject, terminator: "\n\n")
-        #endif
         
         // file logging
         guard writeToFile else {
