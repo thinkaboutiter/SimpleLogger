@@ -2,7 +2,27 @@
 //  MultipleFilesLogWriter.swift
 //  SimpleLogger
 //
-//  Created by Boyan Yankov on W07 17/Feb/2019 Sun.
+//  The MIT License (MIT)
+//
+//  Copyright (c) 2020 thinkaboutiter (thinkaboutiter@gmail.com)
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 //
 
 import Foundation
@@ -10,7 +30,7 @@ import Foundation
 struct MultipleFilesLogWriter {
     
     // MARK: - Properties
-    fileprivate static var logsDirectoryPath: String = ""
+    private static var logsDirectoryPath: String = ""
     static func setLogsDirectoryPath(_ newValue: String) {
         MultipleFilesLogWriter.logsDirectoryPath = newValue
         guard MultipleFilesLogWriter.logsDirectoryPath.count > 0 else {
@@ -20,10 +40,10 @@ struct MultipleFilesLogWriter {
     }
     
     /// We should have only one logs directory.
-    fileprivate static var didCreateLogsDirectory: Bool = false
+    private static var didCreateLogsDirectory: Bool = false
     
     // MARK: - Initialization
-    fileprivate init() {}
+    private init() {}
     
     // MARK: - Utils
     static func write(_ candidate: String,
@@ -32,18 +52,18 @@ struct MultipleFilesLogWriter {
         guard MultipleFilesLogWriter.didCreateLogsDirectory else {
             let message: String = "Logs directory not available"
             print(message)
-            throw MultipleFilesLogWriterError.writeToFile(reason: message)
+            throw Error.writeToFile(reason: message)
         }
         let path_candidate: String = "\(MultipleFilesLogWriter.logsDirectoryPath)/\(fileName)\(Constants.logFileExtension)"
         guard let valid_absolutePath: String = WriterUtils.absoulutePathString(from: path_candidate) else {
             let message: String = "Invalid log file path!"
             print(message)
-            throw MultipleFilesLogWriterError.writeToFile(reason: message)
+            throw Error.writeToFile(reason: message)
         }
         try WriterUtils.write(candidate, toFileAtPath: valid_absolutePath)
     }
     
-    fileprivate static func createLogsDirectory(at path: String) {
+    private static func createLogsDirectory(at path: String) {
         guard !MultipleFilesLogWriter.didCreateLogsDirectory else {
             return
         }
@@ -51,16 +71,14 @@ struct MultipleFilesLogWriter {
     }
 }
 
-extension MultipleFilesLogWriter {
-    
-    fileprivate struct Constants {
+private extension MultipleFilesLogWriter {
+     enum Constants {
         static let logFileExtension: String = ".log"
     }
 }
 
 extension MultipleFilesLogWriter {
-    
-    enum MultipleFilesLogWriterError: Error {
+    enum Error: Swift.Error {
         case writeToFile(reason: String)
     }
 }
