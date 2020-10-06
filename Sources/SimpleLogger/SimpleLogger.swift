@@ -2,7 +2,7 @@
 //  SimpleLogger.swift
 //  The MIT License (MIT)
 //
-//  Copyright (c) 2016 thinkaboutiter (thinkaboutiter@gmail.com)
+//  Copyright (c) 2020 thinkaboutiter (thinkaboutiter@gmail.com)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
+//
 
 
 import Foundation
@@ -44,7 +45,7 @@ public enum SimpleLogger: String {
     case network = "🌎"
     case cache = "📀"
     
-    fileprivate var asciiValue: String {
+    private var asciiValue: String {
         let result: String
         switch self {
         case .general:
@@ -69,32 +70,32 @@ public enum SimpleLogger: String {
     
     // MARK: Properies
     /// Logging verbosity (using verbosity toggles).
-    fileprivate(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
+    private(set) public static var verbosityLevel: UInt32 = Verbosity.all.rawValue
     public static func setVerbosityLevel(_ newValue: UInt32) {
         Logger.verbosityLevel = newValue
     }
     
     /// Prefixes delimiter string.
-    fileprivate(set) public static var delimiter: String = "»"
+    private(set) public static var delimiter: String = "»"
     public static func setDelimiter(_ newValue: String) {
         Logger.delimiter = newValue
     }
     
     /// Prefix customization.
-    fileprivate(set) public static var prefix: SimpleLogger.Prefix = .emoji
+    private(set) public static var prefix: SimpleLogger.Prefix = .emoji
     public static func setPrefix(_ newValue: SimpleLogger.Prefix) {
         Logger.prefix = newValue
     }
     
     /// Opt to log path as prefix to the log message.
     /// Disabling this may mess the sinlge log file if it is used!.
-    fileprivate(set) public static var shouldLogFilePathPrefix: Bool = true
+    private(set) public static var shouldLogFilePathPrefix: Bool = true
     public static func setShouldLogFilePathPrefix(_ newValue: Bool) {
         Logger.shouldLogFilePathPrefix = newValue
     }
     
     /// Used to enable writing logs into single or multiple files.
-    fileprivate(set) public static var fileLogging: SimpleLogger.FileLogging = .none
+    private(set) public static var fileLogging: SimpleLogger.FileLogging = .none
     public static func setFileLogging(_ newValue: SimpleLogger.FileLogging) {
         Logger.fileLogging = newValue
     }
@@ -124,7 +125,7 @@ public enum SimpleLogger: String {
         SingleFileLogWriter.setLogFileMaxSizeInBytes(newValue)
     }
     
-    fileprivate var timePrefix: String {
+    private var timePrefix: String {
         let result: String
         switch Logger.prefix {
         case .ascii:
@@ -147,7 +148,7 @@ public enum SimpleLogger: String {
         return prefix
     }
     
-    fileprivate var logFile_timePrefix: String {
+    private var logFile_timePrefix: String {
         let result: String
         switch Logger.prefix {
         case .ascii:
@@ -170,7 +171,7 @@ public enum SimpleLogger: String {
         return prefix
     }
     
-    fileprivate var _verbosity: Verbosity {
+    private var _verbosity: Verbosity {
         let resut: Verbosity
         switch self {
         case .general:
@@ -193,41 +194,41 @@ public enum SimpleLogger: String {
         return resut
     }
     
-    fileprivate var shouldLog: Bool {
+    private var shouldLog: Bool {
         return (Logger.verbosityLevel & self._verbosity.rawValue) != 0
     }
     
     // MARK: Timestamps
-    fileprivate static let dateFormatter: DateFormatter = {
+    private static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    fileprivate static func timestamp() -> String {
+    private static func timestamp() -> String {
         return Logger.dateFormatter.string(from: Date())
     }
     
-    fileprivate static let logFile_dateFormatter: DateFormatter = {
+    private static let logFile_dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    fileprivate static func logFile_timestamp() -> String {
+    private static func logFile_timestamp() -> String {
         return Logger.logFile_dateFormatter.string(from: Date())
     }
     
-    fileprivate static let logFileName_dateFormatter: DateFormatter = {
+    private static let logFileName_dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
     
-    fileprivate static func logFileName_timestamp() -> String {
+    private static func logFileName_timestamp() -> String {
         return Logger.logFileName_dateFormatter.string(from: Date())
     }
     
@@ -292,12 +293,12 @@ public enum SimpleLogger: String {
     // MARK: - Logging Utils
     /// Logging message.
     @discardableResult
-    fileprivate func log(message: String?,
-                         writeToFile: Bool,
-                         scopeName: String?,
-                         filePath: String,
-                         function: String,
-                         line: Int) -> Logger
+    private func log(message: String?,
+                     writeToFile: Bool,
+                     scopeName: String?,
+                     filePath: String,
+                     function: String,
+                     line: Int) -> Logger
     {
         let sourceLocationPrefix: String?
         if Logger.shouldLogFilePathPrefix {
@@ -364,12 +365,12 @@ public enum SimpleLogger: String {
     
     /// Logging object.
     @discardableResult
-    fileprivate func log(any: Any?,
-                         writeToFile: Bool,
-                         scopeName: String?,
-                         filePath: String,
-                         function: String,
-                         line: Int) -> Logger
+    private func log(any: Any?,
+                     writeToFile: Bool,
+                     scopeName: String?,
+                     filePath: String,
+                     function: String,
+                     line: Int) -> Logger
     {
         // console logging
         debugPrint(any ?? "<null>", terminator: "\n\n")
@@ -399,10 +400,10 @@ public enum SimpleLogger: String {
 }
 
 // MARK: - Writing to file
-extension SimpleLogger {
+private extension SimpleLogger {
     
-    fileprivate func writeToSingleLogFile(_ message: String?,
-                                          sourceLocationPrefix: String?)
+    func writeToSingleLogFile(_ message: String?,
+                              sourceLocationPrefix: String?)
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
@@ -416,9 +417,9 @@ extension SimpleLogger {
         }
     }
     
-    fileprivate func write(_ message: String?,
-                           filePath: String,
-                           sourceLocationPrefix: String?)
+    func write(_ message: String?,
+               filePath: String,
+               sourceLocationPrefix: String?)
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
@@ -434,10 +435,10 @@ extension SimpleLogger {
         }
     }
     
-    private func _logFileMessage(from message: String?,
-                                 sourceLocationPrefix: String?,
-                                 logFile_emojiTimePrefix: String,
-                                 delimiter: String) -> String
+    func _logFileMessage(from message: String?,
+                         sourceLocationPrefix: String?,
+                         logFile_emojiTimePrefix: String,
+                         delimiter: String) -> String
     {
         let result: String
         if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
@@ -451,9 +452,8 @@ extension SimpleLogger {
 }
 
 // MARK: - Logging to file
-extension SimpleLogger {
-    
-    public enum FileLogging: UInt8 {
+public extension SimpleLogger {
+    enum FileLogging: UInt8 {
         case none           = 0
         case singleFile     = 1
         case multipleFiles  = 2
@@ -461,18 +461,16 @@ extension SimpleLogger {
 }
 
 // MARK: - Prefix type
-extension SimpleLogger {
-    
-    public enum Prefix: UInt8 {
+public extension SimpleLogger {
+    enum Prefix: UInt8 {
         case ascii = 0
         case emoji = 1
     }
 }
 
 // MARK: - Verbosity
-extension SimpleLogger {
-    
-    public enum Verbosity: UInt32 {
+public extension SimpleLogger {
+    enum Verbosity: UInt32 {
         // none/all
         case none =         0x0000_0000
         case all =          0xFF
