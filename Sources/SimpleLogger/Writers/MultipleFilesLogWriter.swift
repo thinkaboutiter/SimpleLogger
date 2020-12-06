@@ -71,13 +71,17 @@ struct MultipleFilesLogWriter {
     }
 }
 
-private extension MultipleFilesLogWriter {
-     enum Constants {
+// MARK: - Constants
+extension MultipleFilesLogWriter {
+    
+    private enum Constants {
         static let logFileExtension: String = ".log"
     }
 }
 
+// MARK: - Error
 extension MultipleFilesLogWriter {
+    
     enum Error: Swift.Error {
         case writeToFile(reason: String)
     }

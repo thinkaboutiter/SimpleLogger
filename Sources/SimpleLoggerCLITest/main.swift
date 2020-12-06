@@ -62,9 +62,11 @@ private func log_objects() {
     ]
     Logger.debug.message("Dictionary:").object(sampleDictionary)
 }
-fileprivate struct Constants {
+
+private struct Constants {
     static let scope_1_name: String = "scope_1"
 }
+
 private func log_scopeObjects() {
     // array
     let sampleArray: [Int] = [
@@ -104,7 +106,7 @@ private func exerciseSimpleLogger() {
     log_nil()
 }
 
-fileprivate func test_writing_to_file() {
+private func test_writing_to_file() {
     
     guard let valid_directoryPath: String = Logger.currentDirectoryPath() else {
         let message: String = "Unable to obtain valid directory path!"

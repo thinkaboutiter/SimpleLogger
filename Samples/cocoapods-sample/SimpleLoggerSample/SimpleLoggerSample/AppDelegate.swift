@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - Configurations
 extension AppDelegate {
     
-    fileprivate func setupConfigurations() {
+    private func setupConfigurations() {
         self.configure_simpleLogger()
     }
     
@@ -63,7 +63,7 @@ extension AppDelegate {
 // MARK: - Exercise Simple logger
 extension AppDelegate {
     
-    fileprivate func exerciseSimpleLogger() {
+    private func exerciseSimpleLogger() {
         self.log_message()
         self.log_object()
         self.log_nil()
