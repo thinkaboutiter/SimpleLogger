@@ -400,10 +400,10 @@ public enum SimpleLogger: String {
 }
 
 // MARK: - Writing to file
-private extension SimpleLogger {
+extension SimpleLogger {
     
-    func writeToSingleLogFile(_ message: String?,
-                              sourceLocationPrefix: String?)
+    private func writeToSingleLogFile(_ message: String?,
+                                      sourceLocationPrefix: String?)
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
@@ -417,9 +417,9 @@ private extension SimpleLogger {
         }
     }
     
-    func write(_ message: String?,
-               filePath: String,
-               sourceLocationPrefix: String?)
+    private func write(_ message: String?,
+                       filePath: String,
+                       sourceLocationPrefix: String?)
     {
         let logFile_message: String = self._logFileMessage(from: message,
                                                            sourceLocationPrefix: sourceLocationPrefix,
@@ -435,10 +435,10 @@ private extension SimpleLogger {
         }
     }
     
-    func _logFileMessage(from message: String?,
-                         sourceLocationPrefix: String?,
-                         logFile_emojiTimePrefix: String,
-                         delimiter: String) -> String
+    private func _logFileMessage(from message: String?,
+                                 sourceLocationPrefix: String?,
+                                 logFile_emojiTimePrefix: String,
+                                 delimiter: String) -> String
     {
         let result: String
         if let valid_sourceLocationPrefix: String = sourceLocationPrefix {
@@ -451,26 +451,29 @@ private extension SimpleLogger {
     }
 }
 
-// MARK: - Logging to file
-public extension SimpleLogger {
-    enum FileLogging: UInt8 {
+// MARK: - FileLogging
+extension SimpleLogger {
+    
+    public enum FileLogging: UInt8 {
         case none           = 0
         case singleFile     = 1
         case multipleFiles  = 2
     }
 }
 
-// MARK: - Prefix type
-public extension SimpleLogger {
-    enum Prefix: UInt8 {
+// MARK: - Prefix
+extension SimpleLogger {
+    
+    public enum Prefix: UInt8 {
         case ascii = 0
         case emoji = 1
     }
 }
 
 // MARK: - Verbosity
-public extension SimpleLogger {
-    enum Verbosity: UInt32 {
+extension SimpleLogger {
+    
+    public enum Verbosity: UInt32 {
         // none/all
         case none =         0x0000_0000
         case all =          0xFF
