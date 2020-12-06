@@ -36,7 +36,7 @@ struct WriterUtils {
         }
         let pathComponents: [String] = valid_url.pathComponents
         let folderPath: String
-        let fm = FileManager.default
+        let fm = WriterUtils.fileManager
         if fm.fileExists(atPath: valid_url.absoluteString) {
             folderPath = "/\(pathComponents[1..<pathComponents.count-1].joined(separator: "/"))"
         }
@@ -47,7 +47,7 @@ struct WriterUtils {
     }
     
     static func createDirectory(at path: String) -> Bool {
-        let fm: FileManager = FileManager.default
+        let fm = WriterUtils.fileManager
         if !fm.fileExists(atPath: path) {
             do {
                 try fm.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
@@ -73,7 +73,7 @@ struct WriterUtils {
     static func write(_ candidate: String,
                       toFileAtPath path: String) throws
     {
-        let fm = FileManager.default
+        let fm = WriterUtils.fileManager
         if !fm.fileExists(atPath: path) {
             do {
                 try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
@@ -104,7 +104,7 @@ struct WriterUtils {
     }
     
     static func removeFile(at path: String) throws {
-        let fm = FileManager.default
+        let fm = WriterUtils.fileManager
         guard fm.fileExists(atPath: path) else {
             let message: String = "File doesn't exit at path=\(path)"
             throw Error.removeFile(reason: message)
@@ -113,7 +113,7 @@ struct WriterUtils {
     }
     
     static func fileSize(at path: String) -> UInt64 {
-        let fm: FileManager = FileManager.default
+        let fm = WriterUtils.fileManager
         guard fm.fileExists(atPath: path) else {
             return 0
         }
@@ -127,9 +127,17 @@ struct WriterUtils {
     }
 }
 
-// MARK: - Errors
+// MARK: - Dependecies
 extension WriterUtils {
     
+    private static let fileManager: FileManager = {
+        return FileManager.default
+    }()
+}
+
+// MARK: - Errors
+extension WriterUtils {
+
     enum Error: Swift.Error {
         case writeToFile(reason: String)
         case removeFile(reason: String)

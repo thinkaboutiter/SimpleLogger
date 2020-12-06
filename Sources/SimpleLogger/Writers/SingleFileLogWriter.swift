@@ -110,15 +110,19 @@ struct SingleFileLogWriter {
     }
 }
 
+// MARK: - Constants
 private extension SingleFileLogWriter {
-     enum Constants {
+     
+    enum Constants {
         static let defaultLogFileName: String = "logfile.log"
         static let bytesInMegabyte: UInt64 = 1024 * 1024
         static let defaultLogFileSizeInMegabytes: UInt64 = 10
     }
 }
 
+// MARK: - Error
 extension SingleFileLogWriter {
+    
     enum Error: Swift.Error {
         case writeToFile(reason: String)
         case removeFile(reason: String)
